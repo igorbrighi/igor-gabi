@@ -25,18 +25,30 @@
   --sh-hover: rgba(44, 37, 32, 0.08);
   --r: 16px;
   --rs: 10px;
+
+  /* Cores temáticas de fundo para a página principal */
+  --bg-safari-theme: #FAF5EE;   /* Areia quente / Savana */
+  --bg-zanzibar-theme: #EAF3F7; /* Azul piscina / Mar tropical */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: var(--ink-dark); min-height: 100vh; padding-bottom: 85px; letter-spacing: -0.01em; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: var(--ink-dark); min-height: 100vh; padding-bottom: 85px; letter-spacing: -0.01em; transition: background-color 0.3s ease; }
+
+/* Alteração dinâmica do fundo baseada na aba ativa */
+body.theme-safari { background-color: var(--bg-safari-theme); }
+body.theme-zanzibar { background-color: var(--bg-zanzibar-theme); }
+body.theme-frases { background-color: var(--bg-sand); }
 
 /* Barra Superior Elegante */
-.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--safari-green); height: 60px; display: flex; align-items: center; justify-content: center; padding: 0 16px; box-shadow: 0 2px 12px rgba(25, 54, 39, 0.12); }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--safari-green); height: 60px; display: flex; align-items: center; justify-content: center; padding: 0 16px; box-shadow: 0 2px 12px rgba(25, 54, 39, 0.12); transition: background-color 0.3s ease; }
 .nav-title { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 20px; font-weight: 600; letter-spacing: .03em; text-align: center; }
 .nav-title span { color: var(--gold); font-style: italic; font-weight: 400; }
 
+/* Modificadores da barra superior por tema */
+body.theme-zanzibar .nav { background: var(--zanzibar-blue); box-shadow: 0 2px 12px rgba(31, 110, 140, 0.15); }
+
 /* Views com transição suave */
-.view { display: none; padding: 76px 16px 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.25h ease-in-out; }
+.view { display: none; padding: 76px 16px 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.25s ease-in-out; }
 .view.active { display: block; }
 
 @keyframes fadeIn {
@@ -95,6 +107,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: va
 .frase-card { background: var(--white); border-radius: var(--r); padding: 16px; margin-bottom: 10px; box-shadow: 0 4px 10px var(--sh); border: 1px solid var(--border-color); position: relative; cursor: pointer; transition: all 0.15s ease; }
 .frase-card:active { background: #FAF9F6; transform: scale(0.99); }
 .fr-sw { font-size: 17px; font-weight: 700; color: var(--safari-green); margin-bottom: 4px; }
+body.theme-zanzibar .fr-sw { color: var(--zanzibar-blue); }
 .fr-pt { font-size: 14px; color: var(--ink-dark); font-weight: 500; }
 .fr-tip { font-size: 12px; color: var(--ink-muted); font-style: italic; margin-top: 6px; line-height: 1.4; background: #FAF9F6; padding: 6px 10px; border-radius: 6px; }
 .copy-indicator { position: absolute; top: 16px; right: 16px; font-size: 11px; color: var(--gold); opacity: 0; transition: opacity 0.2s; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: #FDF9EC; padding: 2px 6px; border-radius: 4px; }
@@ -118,9 +131,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: va
 .tab-item.active.frases .tl { color: var(--gold); }
 </style>
 </head>
-<body>
-
-<nav class="nav">
+<body class="theme-safari"> <nav class="nav">
   <div class="nav-title">Igor & Gabi · <span>Tanzânia & Zanzibar</span></div>
 </nav>
 
@@ -282,6 +293,10 @@ function showView(viewId) {
   document.getElementById('view-' + viewId).classList.add('active');
   document.querySelector('.tab-bar .tab-item.' + viewId).classList.add('active');
   
+  // Atualiza as classes do body para refletir a paleta visual correta
+  document.body.className = '';
+  document.body.classList.add('theme-' + viewId);
+
   if(viewId === 'safari' || viewId === 'zanzibar') {
     document.getElementById('list-' + viewId).style.display = "block";
     document.getElementById('detail-' + viewId).style.display = "none";
