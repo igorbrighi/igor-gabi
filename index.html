@@ -4,421 +4,140 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>Lua de Mel · Tanzânia & Zanzibar</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="TZ & ZNZ">
-<meta name="theme-color" content="#2E5A44">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-sand: #F9F6F0;
-  --bg-card: #FFFFFF;
-  --border-color: #E6DFD3;
-  --safari-green: #2E5A44;
-  --savannah: #C87A3E;
-  --zanzibar-blue: #1F6E8C;
-  --gold: #D4AF37;
-  --ink-dark: #2C2520;
-  --ink-muted: #7A6F66;
-  --white: #FFFFFF;
-  --sh: rgba(44, 37, 32, 0.06);
-  --r: 12px;
-  --rs: 8px;
+  --safari: #2E5A44; --savannah: #C87A3E; --ocean: #1F6E8C; --gold: #D4AF37;
+  --bg: #FDFBF8; --card: #FFFFFF; --text: #2C2520; --muted: #7A6F66;
+  --shadow: rgba(44, 37, 32, 0.08); --r: 16px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: var(--ink-dark); min-height: 100vh; padding-bottom: 75px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-/* Barra Superior */
-.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--safari-green); height: 56px; display: flex; align-items: center; padding: 0 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-.nav-title { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 18px; font-weight: 600; letter-spacing: .02em; }
+/* Navegação Superior */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(253, 251, 248, 0.9); backdrop-filter: blur(10px); height: 60px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.nav-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--safari); }
 .nav-title span { color: var(--gold); font-style: italic; }
 
-/* Barra de Abas Inferior */
-.tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--white); border-top: 1px solid var(--border-color); display: flex; height: 62px; box-shadow: 0 -2px 10px var(--sh); }
-.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; border: none; background: none; }
-.tab-item .ti { font-size: 20px; line-height: 1; transition: transform .15s; }
-.tab-item .tl { font-size: 11px; color: var(--ink-muted); font-weight: 500; }
-.tab-item.active .ti { transform: scale(1.15); }
-.tab-item.active.safari .ti { color: var(--savannah); }
-.tab-item.active.safari .tl { color: var(--savannah); }
-.tab-item.active.zanzibar .ti { color: var(--zanzibar-blue); }
-.tab-item.active.zanzibar .tl { color: var(--zanzibar-blue); }
-.tab-item.active.frases .ti { color: var(--gold); }
-.tab-item.active.frases .tl { color: var(--gold); }
+/* Tabs Inferiores */
+.tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; background: white; display: flex; height: 70px; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid rgba(0,0,0,0.05); box-shadow: 0 -4px 20px var(--shadow); }
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: none; border: none; cursor: pointer; color: var(--muted); transition: 0.3s; }
+.tab-item.active { color: var(--safari); font-weight: 700; }
+.tab-item i { font-size: 22px; margin-bottom: 2px; }
+.tab-item span { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* Views */
-.view { display: none; padding: 72px 14px 20px; max-width: 600px; margin: 0 auto; }
+/* Conteúdo */
+.view { display: none; padding: 80px 20px 100px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.4s ease; }
 .view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Contagem Regressiva */
-.cd-banner { background: #EFEAE2; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--rs); text-align: center; font-size: 13px; font-weight: 500; color: var(--safari-green); margin-bottom: 14px; }
+/* Cards */
+.category-hdr { margin-bottom: 20px; }
+.category-hdr h2 { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--safari); }
+.category-hdr p { font-size: 14px; color: var(--muted); }
 
-/* Header Temático */
-.trip-hdr { background: linear-gradient(135deg, var(--safari-green), #193627); border-radius: var(--r); padding: 22px; color: var(--white); margin-bottom: 16px; }
-.trip-hdr h2 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; margin-bottom: 4px; }
-.trip-subtitle { font-size: 13px; color: #A3BFB0; text-transform: uppercase; letter-spacing: 0.05em; }
+.day-card { background: var(--card); border-radius: var(--r); padding: 18px; margin-bottom: 12px; box-shadow: 0 4px 15px var(--shadow); display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(0,0,0,0.02); }
+.day-card:active { transform: scale(0.97); }
+.day-date-circle { width: 50px; height: 50px; border-radius: 50%; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--gold); }
+.day-date-circle .d { font-weight: 700; font-size: 16px; color: var(--safari); line-height: 1; }
+.day-date-circle .m { font-size: 9px; text-transform: uppercase; color: var(--muted); }
+.day-content { flex: 1; }
+.day-content h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.day-content p { font-size: 12px; color: var(--muted); }
 
-/* Cards de Itinerário */
-.day-card { background: var(--white); border-radius: var(--rs); padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; margin-bottom: 8px; box-shadow: 0 2px 4px var(--sh); border: 1px solid transparent; transition: all 0.15s; }
-.day-card:active { transform: scale(0.99); opacity: 0.9; }
-.day-num { width: 44px; height: 44px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; color: var(--white); }
-.view-safari .day-num { background: var(--savannah); }
-.view-zanzibar .day-num { background: var(--zanzibar-blue); }
-.dn-n { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; line-height: 1; }
-.dn-m { font-size: 9px; text-transform: uppercase; font-weight: 500; }
-.day-info { flex: 1; min-width: 0; }
-.day-tt { font-weight: 700; font-size: 14px; color: var(--ink-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.day-sub { font-size: 12px; color: var(--ink-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Bottom Sheet (Abertura de Informações) */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px); }
+.overlay.active { opacity: 1; visibility: visible; }
+.bottom-sheet { position: fixed; left: 0; right: 0; bottom: -100%; background: var(--bg); z-index: 2001; border-radius: 24px 24px 0 0; padding: 30px 20px; transition: 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
+.bottom-sheet.active { bottom: 0; }
+.sheet-handle { width: 40px; height: 5px; background: #DDD; border-radius: 10px; margin: -15px auto 20px; }
 
-/* Tags */
-.day-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
-.dtag { font-size: 10px; padding: 2px 7px; border-radius: 12px; font-weight: 500; }
-.dtag.lod { background: #F0E6DF; color: var(--savannah); }
-.dtag.saf { background: #E4ECE8; color: var(--safari-green); }
-.dtag.flight { background: #E1EDF2; color: var(--zanzibar-blue); }
-.dtag.tour { background: #F7EFCB; color: #947600; }
+/* Detalhes dentro da Sheet */
+.detail-tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+.tag-safari { background: #E6F0EA; color: var(--safari); }
+.tag-flight { background: #E1EDF2; color: var(--ocean); }
+.tag-lod { background: #F9F1E6; color: var(--savannah); }
+.detail-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-bottom: 15px; }
+.info-box { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 3px solid var(--gold); }
+.info-box label { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 700; display: block; margin-bottom: 5px; }
 
-/* Detalhes */
-.detail-container { display: none; }
-.dd-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.back-btn { width: 40px; height: 40px; background: var(--white); border: 1px solid var(--border-color); border-radius: var(--rs); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-.dd-title-box { flex: 1; }
-.dd-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--ink-dark); }
-.dd-date { font-size: 12px; color: var(--ink-muted); }
+/* Aba Mapa */
+#map { height: calc(100vh - 130px); width: 100%; border-radius: 12px; z-index: 1; }
 
-.info-block { background: var(--white); border-radius: var(--r); padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 4px var(--sh); border-left: 4px solid var(--border-color); }
-.info-block.lod-s { border-left-color: var(--gold); }
-.info-block.saf-s { border-left-color: var(--savannah); }
-.info-block.flight-s { border-left-color: var(--zanzibar-blue); }
-.block-ttl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin-bottom: 6px; color: var(--ink-muted); }
-.block-content { font-size: 14px; line-height: 1.5; color: var(--ink-dark); }
-
-/* Sistema de Copiar Frases */
-.search-box { background: var(--white); border: 1px solid var(--border-color); padding: 12px; border-radius: var(--rs); width: 100%; font-size: 14px; margin-bottom: 16px; font-family: inherit; outline: none; }
-.frase-card { background: var(--white); border-radius: var(--rs); padding: 14px; margin-bottom: 8px; box-shadow: 0 2px 4px var(--sh); position: relative; cursor: pointer; transition: background 0.15s; }
-.frase-card:active { background: #FAF8F5; }
-.fr-sw { font-size: 16px; font-weight: 700; color: var(--safari-green); margin-bottom: 4px; }
-.fr-pt { font-size: 14px; color: var(--ink-dark); }
-.fr-tip { font-size: 11px; color: var(--ink-muted); font-style: italic; margin-top: 4px; }
-.copy-indicator { position: absolute; top: 14px; right: 14px; font-size: 12px; color: var(--gold); opacity: 0; transition: opacity 0.2s; font-weight: 500; }
-.frase-card.copied .copy-indicator { opacity: 1; }
+/* Swahili */
+.frase-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; position: relative; border: 1px solid rgba(0,0,0,0.03); }
+.frase-item:active { background: #F9F1E6; }
+.frase-sw { font-weight: 700; color: var(--safari); font-size: 16px; }
+.frase-pt { color: var(--text); font-size: 14px; margin-top: 2px; }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="nav-title">Nossa Lua de Mel · <span>Tanzânia & Zanzibar</span></div>
+  <div class="nav-title">Lua de Mel · <span>Tanzânia & Zanzibar</span></div>
 </nav>
 
-<main class="view view-safari active" id="view-safari">
-  <div class="main-list" id="list-safari">
-    <div class="cd-banner" id="countdown-banner">Carregando contagem regressiva...</div>
-    <div class="trip-hdr">
-      <h2>Aventura na Savana</h2>
-      <p class="trip-subtitle">Deslocamentos e Parques Nacionais</p>
-    </div>
-    <div id="grid-safari"></div>
+<main id="view-safari" class="view active">
+  <div class="category-hdr">
+    <h2>Safaris & Parques</h2>
+    <p>A jornada selvagem pela Tanzânia</p>
   </div>
-  <div class="detail-container" id="detail-safari"></div>
+  <div id="grid-safari"></div>
 </main>
 
-<main class="view view-zanzibar" id="view-zanzibar">
-  <div class="main-list" id="list-zanzibar">
-    <div class="trip-hdr" style="background: linear-gradient(135deg, var(--zanzibar-blue), #103F52);">
-      <h2>Paraíso Tropical</h2>
-      <p class="trip-subtitle">Zanzibar e Retorno para Casa</p>
-    </div>
-    <div id="grid-zanzibar"></div>
+<main id="view-zanzibar" class="view">
+  <div class="category-hdr">
+    <h2>Zanzibar</h2>
+    <p>O paraíso turquesa do Índico</p>
   </div>
-  <div class="detail-container" id="detail-zanzibar"></div>
+  <div id="grid-zanzibar"></div>
 </main>
 
-<main class="view view-frases" id="view-frases">
-  <div class="trip-hdr" style="background: linear-gradient(135deg, var(--gold), #8A6D1C);">
-    <h2>Dicionário de Bolso</h2>
-    <p class="trip-subtitle">Expressões essenciais em Swahili</p>
+<main id="view-map" class="view" style="padding: 70px 0 0 0;">
+  <div id="map"></div>
+</main>
+
+<main id="view-swahili" class="view">
+  <div class="category-hdr">
+    <h2>Swahili</h2>
+    <p>Expressões para o dia a dia</p>
   </div>
-  <input type="text" class="search-box" id="search-frases" placeholder="Buscar expressão (ex: obrigado, bom dia)..." oninput="filterFrases()">
-  <div id="frases-container"></div>
+  <div id="grid-swahili"></div>
 </main>
 
 <nav class="tab-bar">
-  <button class="tab-item active safari" onclick="showView('safari')">
-    <span class="ti">🦁</span><span class="tl">Safari</span>
-  </button>
-  <button class="tab-item zanzibar" onclick="showView('zanzibar')">
-    <span class="ti">🏝️</span><span class="tl">Zanzibar</span>
-  </button>
-  <button class="tab-item frases" onclick="showView('frases')">
-    <span class="ti">🗣️</span><span class="tl">Swahili</span>
-  </button>
+  <button class="tab-item active" onclick="showTab('safari')"><i>🦁</i><span>Safari</span></button>
+  <button class="tab-item" onclick="showTab('zanzibar')"><i>🏖️</i><span>Zanzibar</span></button>
+  <button class="tab-item" onclick="showTab('map')"><i>🗺️</i><span>Mapa</span></button>
+  <button class="tab-item" onclick="showTab('swahili')"><i>🗣️</i><span>Frases</span></button>
 </nav>
 
+<div id="overlay" class="overlay" onclick="closeSheet()"></div>
+<div id="bottom-sheet" class="bottom-sheet">
+  <div class="sheet-handle"></div>
+  <div id="sheet-content"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// Banco de Dados estruturado a partir da sua Planilha do Excel
+// Dados da Planilha [cite: 1, 2]
 const ITINERARIO = {
   safari: [
-    {
-      data: "03/06", diaSemana: "Quarta-feira", local: "Partida de Porto Alegre", sub: "Início da jornada rumo à África!",
-      hospedagem: "Casa de amigos em SP",
-      voo: "Voo G3 1239 (Gol)<br>🛫 POA: 18:35h<br>🛬 SP - GUARULHOS: 20:25h<br>📌 Reserva: CDQLXN"
-    },
-    {
-      data: "04/06", diaSemana: "Quinta-feira", local: "Voo Internacional (SP ➔ JNB)", sub: "Travessia do Atlântico",
-      hospedagem: "Pernoite a bordo (Voo)",
-      voo: "Voo de Longo Curso<br>🛫 SP - GUARULHOS: 17:05h<br>🛬 JNB - Joanesburgo: 07:05h (+1 dia)<br>📌 Reserva: CTCRWA"
-    },
-    {
-      data: "05/06", diaSemana: "Sexta-feira", local: "Conexão para Dar Es Salaam", sub: "Chegada em solo tanzaniano",
-      hospedagem: "Transit Airport B&B",
-      voo: "Voo TC209<br>🛫 JNB - Joanesburgo: 14:15h<br>🛬 DAR - Dar Es Salaam"
-    },
-    {
-      data: "06/06", diaSemana: "Sábado", local: "Tarangire National Park", sub: "Primeiro dia oficial de Safari",
-      hospedagem: "SURICATA BOMA LODGE",
-      safari: "Safari focado no Tarangire, conhecido por seus gigantescos Baobás e grandes manadas de Elefantes.",
-      voo: "Voo TC134 (Madrugada)<br>🛫 DAR - Dar Es Salaam: 05:00h<br>🛬 JRO - Kilimanjaro"
-    },
-    {
-      data: "07/06", diaSemana: "Domingo", local: "Serengeti National Park", sub: "As planícies infinitas africanas",
-      hospedagem: "Matawi Serengeti Camp",
-      safari: "Exploração profunda do Serengeti. Dia ideal para buscar os Big Five (Leão, Leopardo, Elefante, Rinoceronte e Búfalo)."
-    },
-    {
-      data: "08/06", diaSemana: "Segunda-feira", local: "Serengeti (Dia Completo)", sub: "Vida selvagem e paisagens icônicas",
-      hospedagem: "Matawi Serengeti Camp",
-      safari: "Acompanhamento da vida animal, migrações e o incrível amanhecer na savana."
-    },
-    {
-      data: "09/06", diaSemana: "Terça-feira", local: "Serengeti ➔ Ngorongoro", sub: "Deslocamento estratégico",
-      hospedagem: "Ang'ata Ngorongoro Camp",
-      safari: "Últimos game drives saindo do Serengeti a caminho da região da Cratera."
-    },
-    {
-      data: "10/06", diaSemana: "Quarta-feira", local: "Cratera de Ngorongoro", sub: "O 'Jardim do Éden' da África",
-      hospedagem: "Suricata Boma Lodge",
-      safari: "Descida para o interior da cratera vulcânica intacta. Alta chance de avistar o raro Rinoceronte Negro."
-    }
+    { id:1, d:"03", m:"Jun", loc:"POA ➔ São Paulo", sub:"Início da Jornada", lod:"Casa de Amigos", voo:"G3 1239 | Reserva: CDQLXN", desc:"Partida 18:35h de Porto Alegre. Noite em SP.", type:"flight" },
+    { id:2, d:"04", m:"Jun", loc:"SP ➔ Joanesburgo", sub:"Voo Internacional", lod:"Pernoite Voo", voo:"Reserva: CTCRWA | Partida 17:05h", desc:"Longa distância rumo à África.", type:"flight" },
+    { id:3, d:"05", m:"Jun", loc:"Chegada Dar Es Salaam", sub:"Conexão Tanzânia", lod:"Transit Airport B&B", voo:"Voo TC209 | Partida 14:15h", desc:"Chegada e descanso para o safari.", type:"flight" },
+    { id:4, d:"06", m:"Jun", loc:"Parque Tarangire", sub:"O reino dos elefantes", lod:"Suricata Boma Lodge", saf:"Tarangire National Park", voo:"Voo TC134 | 05:00h", desc:"Voo para Kilimanjaro e primeiro safari.", type:"safari" },
+    { id:5, d:"07", m:"Jun", loc:"Serengeti", sub:"As planícies infinitas", lod:"Matawi Serengeti Camp", saf:"Serengeti (Game Drive)", desc:"Entrada no parque mais famoso do mundo.", type:"safari" },
+    { id:6, d:"08", m:"Jun", loc:"Serengeti Total", sub:"Vida selvagem", lod:"Matawi Serengeti Camp", saf:"Serengeti (Dia Inteiro)", desc:"Em busca dos Big Five.", type:"safari" },
+    { id:7, d:"09", m:"Jun", loc:"Serengeti ➔ Ngorongoro", sub:"Transição", lod:"Ang'ata Ngorongoro", saf:"Serengeti (Game Drive)", desc:"Deslocamento para a Cratera.", type:"safari" },
+    { id:8, d:"10", m:"Jun", loc:"Cratera Ngorongoro", sub:"O Jardim do Éden", lod:"Suricata Boma Lodge", saf:"Ngorongoro Crater", desc:"Descida ao interior da cratera intacta.", type:"safari" }
   ],
   zanzibar: [
-    {
-      data: "11/06", diaSemana: "Quinta-feira", local: "Lake Manyara ➔ Zanzibar", sub: "Último safari e voo para a praia",
-      hospedagem: "BAMBOO",
-      safari: "Safari matutino no Lake Manyara National Park (famoso pelos leões escaladores de árvores).",
-      voo: "Voo TC105<br>🛫 JRO - Kilimanjaro: 20:30h<br>🛬 ZNZ - Zanzibar"
-    },
-    {
-      data: "12/06", diaSemana: "Sexta-feira", local: "Zanzibar · Relax no Bamboo", sub: "Primeiro dia para curtir o hotel",
-      hospedagem: "BAMBOO",
-      passeio: "Dia livre para descansar da maratona de safáris e curtir a estrutura do hotel."
-    },
-    {
-      data: "13/06", diaSemana: "Sábado", local: "Zanzibar · Nungwi Beach", sub: "Mudança para o norte da ilha",
-      hospedagem: "ZAVA NUNGWI",
-      passeio: "Aproveitar as praias de areia branca e o pôr do sol espetacular de Nungwi."
-    },
-    {
-      data: "14/06", diaSemana: "Domingo", local: "Zanzibar · Dia de Mergulho", sub: "Explorando o fundo do mar",
-      hospedagem: "ZAVA NUNGWI",
-      passeio: "🤿 MERGULHO AGENDADO!<br>⏰ Horário de Saída: 07:30h da manhã."
-    },
-    {
-      data: "15/06", diaSemana: "Segunda-feira", local: "Zanzibar · Mnemba Island", sub: "Stone Town e Atol de Mnemba",
-      hospedagem: "SHABA BOUTIQUE HOTEL",
-      passeio: "⛵ Passeio clássico para a Ilha / Atol de Mnemba (famoso pelos recifes de corais e águas translúcidas)."
-    },
-    {
-      data: "16/06", diaSemana: "Terça-feira", local: "Zanzibar ➔ Dar Es Salaam", sub: "Início do retorno para casa",
-      hospedagem: "Pernoite no Aeroporto",
-      voo: "Voo TC105<br>🛫 ZNZ - Zanzibar: 22:00h<br>🛬 DAR - Dar Es Salaam"
-    },
-    {
-      data: "17/06", diaSemana: "Quarta-feira", local: "Dar Es Salaam ➔ Joanesburgo", sub: "Pausa estratégica na África do Sul",
-      hospedagem: "MINT HOTEL",
-      voo: "Voo Internacional<br>🛫 DAR - Dar Es Salaam: 05:10h<br>🛬 JNB - Joanesburgo: 07:55h<br>📌 Localizador: AUE9XH"
-    },
-    {
-      data: "18/06", diaSemana: "Quinta-feira", local: "Joanesburgo ➔ São Paulo", sub: "Último voo intercontinental",
-      hospedagem: "Casa de amigos em SP",
-      voo: "Voo de Retorno<br>🛫 JNB - Joanesburgo: 09:50h<br>🛬 SP - GUARULHOS: 15:25h<br>📌 Reserva: CTCRWA"
-    },
-    {
-      data: "19/06", diaSemana: "Sexta-feira", local: "São Paulo ➔ Porto Alegre", sub: "Lar, doce lar!",
-      hospedagem: "Casa :)",
-      voo: "Voo G3 1278 (Gol)<br>🛫 SP - CONGONHAS: 13:55h<br>🛬 POA: 15:45h<br>📌 Reserva: CDQLXN"
-    }
-  ]
-};
-
-// Dicionário de Frases em Swahili (Estilo do app do seu amigo)
-const FRASES = [
-  { sw: "Jambo / Habari", pt: "Olá / Como vai?", tip: "Cumprimento mais comum e amigável." },
-  { sw: "Asante / Asante sana", pt: "Obrigado / Muito obrigado", tip: "Essencial para usar em hotéis e com os guias." },
-  { sw: "Karibu", pt: "Bem-vindo(a)", tip: "Você ouvirá isso em quase todos os lugares que chegar." },
-  { sw: "Hakuna Matata", pt: "Sem problemas / Sem preocupações", tip: "O lema oficial da viagem!" },
-  { sw: "Pole pole", pt: "Devagar, devagar", tip: "Usado para ditar o ritmo calmo da vida na ilha ou caminhadas." },
-  { sw: "Sana", pt: "Muito", tip: "Exemplo: 'Nzuri sana' significa 'Muito bom'." },
-  { sw: "Kwa heri", pt: "Adeus / Tchau", tip: "Para se despedir de alguém." },
-  { sw: "Samahani", pt: "Com licença / Desculpe", tip: "Útil para chamar a atenção educadamente." },
-  { sw: "Bei gani?", pt: "Quanto custa?", tip: "Perfeito para as feirinhas de artesanato em Stone Town." }
-];
-
-// Gerenciamento de Abas
-function showView(viewId) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-  
-  document.getElementById('view-' + viewId).classList.add('active');
-  document.querySelector('.tab-item.' + viewId).classList.add('active');
-  
-  if(viewId === 'safari' || viewId === 'zanzibar') {
-    document.getElementById('list-' + viewId).style.display = "block";
-    document.getElementById('detail-' + viewId).style.display = "none";
-  }
-  window.scrollTo(0,0);
-}
-
-// Renderizar Grade de Dias
-function renderGrid(categoria) {
-  const grid = document.getElementById('grid-' + categoria);
-  grid.innerHTML = "";
-  
-  ITINERARIO[categoria].forEach((dia, idx) => {
-    const card = document.createElement('div');
-    card.className = "day-card";
-    card.onclick = () => showDetail(categoria, idx);
-    
-    const [d, m] = dia.data.split('/');
-    const nomeMes = m === '06' ? 'Jun' : 'Mai';
-    
-    card.innerHTML = `
-      <div class="day-num">
-        <span class="dn-n">${d}</span>
-        <span class="dn-m">${nomeMes}</span>
-      </div>
-      <div class="day-info">
-        <div class="day-tt">${dia.local}</div>
-        <div class="day-sub">${dia.sub}</div>
-        <div class="day-tags">
-          <span class="dtag lod">🏨 ${dia.hospedagem.split(' ')[0]}</span>
-          ${dia.safari ? '<span class="dtag saf">🦁 Safari</span>' : ''}
-          ${dia.voo ? '<span class="dtag flight">✈️ Voo</span>' : ''}
-          ${dia.passeio ? '<span class="dtag tour">🏖️ Passeio</span>' : ''}
-        </div>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-// Mostrar Detalhes do Dia
-function showDetail(categoria, idx) {
-  const dia = ITINERARIO[categoria][idx];
-  const listContainer = document.getElementById('list-' + categoria);
-  const detailContainer = document.getElementById('detail-' + categoria);
-  
-  detailContainer.innerHTML = `
-    <div class="dd-hdr">
-      <button class="back-btn" onclick="hideDetail('${categoria}')">←</button>
-      <div class="dd-title-box">
-        <div class="dd-title">${dia.local}</div>
-        <div class="dd-date">${dia.diaSemana} — ${dia.data}/2026</div>
-      </div>
-    </div>
-    
-    <div class="info-block lod-s">
-      <div class="block-ttl">🏨 Hospedagem / Onde Dormir</div>
-      <div class="block-content"><strong>${dia.hospedagem}</strong></div>
-    </div>
-
-    ${dia.safari ? `
-    <div class="info-block saf-s">
-      <div class="block-ttl">🦁 Atividades do Safari</div>
-      <div class="block-content">${dia.safari}</div>
-    </div>` : ''}
-
-    ${dia.passeio ? `
-    <div class="info-block" style="border-left-color: var(--gold)">
-      <div class="block-ttl">🏖️ Passeios & Lazer</div>
-      <div class="block-content">${dia.passeio}</div>
-    </div>` : ''}
-
-    ${dia.voo ? `
-    <div class="info-block flight-s">
-      <div class="block-ttl">✈️ Informações de Logística & Voo</div>
-      <div class="block-content">${dia.voo}</div>
-    </div>` : ''}
-  `;
-  
-  listContainer.style.display = "none";
-  detailContainer.style.display = "block";
-  window.scrollTo(0,0);
-}
-
-function hideDetail(categoria) {
-  document.getElementById('list-' + categoria).style.display = "block";
-  document.getElementById('detail-' + categoria).style.display = "none";
-}
-
-// Renderizar e Filtrar Frases em Swahili
-function renderFrases(lista) {
-  const container = document.getElementById('frases-container');
-  container.innerHTML = "";
-  lista.forEach(f => {
-    const card = document.createElement('div');
-    card.className = "frase-card";
-    card.onclick = () => copyText(card, f.sw);
-    card.innerHTML = `
-      <div class="fr-sw">${f.sw}</div>
-      <div class="fr-pt">${f.pt}</div>
-      <div class="fr-tip">${f.tip}</div>
-      <div class="copy-indicator">Copiado!</div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-function filterFrases() {
-  const query = document.getElementById('search-frases').value.toLowerCase();
-  const filtradas = FRASES.filter(f => 
-    f.sw.toLowerCase().includes(query) || f.pt.toLowerCase().includes(query)
-  );
-  renderFrases(filtradas);
-}
-
-function copyText(element, text) {
-  if(navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
-      element.classList.add('copied');
-      setTimeout(() => element.classList.remove('copied'), 1500);
-    });
-  }
-}
-
-// Lógica de Contagem Regressiva
-function renderCountdown() {
-  const targetDate = new Date("2026-06-03T18:00:00").getTime();
-  const now = new Date().getTime();
-  const diff = targetDate - now;
-  const banner = document.getElementById('countdown-banner');
-  
-  if (diff <= 0) {
-    banner.innerText = "❤️ A grande viagem começou! Aproveitem cada segundo! 🌍";
-  } else {
-    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-    banner.innerText = `⏳ Faltam exatamente ${dias} dias para a Lua de Mel dos Sonhos!`;
-  }
-}
-
-// Inicialização Geral
-(() => {
-  renderGrid('safari');
-  renderGrid('zanzibar');
-  renderFrases(FRASES);
-  renderCountdown();
-})();
-</script>
-
-</body>
-</html>
+    { id:9, d:"11", m:"Jun", loc:"Manyara ➔ Zanzibar", sub:"Voo para o mar", lod:"Bamboo", saf:"Lake Manyara Park", voo:"TC105 | 20:30h", desc:"Último safari e voo para Zanzibar.", type:"flight" },
+    { id:10, d:"12", m:"Jun", loc:"Relax no Bamboo", sub:"Descanso total", lod:"Bamboo Zanzibar", desc:"Dia de curtir o resort.", type:"zanzibar" },
+    { id:11, d:"13", m:"Jun", loc:"Nungwi", sub:"Norte da Ilha", lod:"Zava Nungwi", desc:"Aproveitar as praias de areia branca.", type:"zanzibar" },
+    { id:12, d:"14", m:"Jun", loc:"Mergulho 🤿", sub:"Kendwa/Nungwi", lod:"Zava Nungwi", pass:"Mergulho às 07:30h", desc:"Explorar o recife de corais.", type:"zanzibar" },
+    { id:13, d:"15", m:"Jun", loc:"Mnemba Island", sub:"Passeio de Barco", lod:"Shaba Boutique", pass:"Atol de Mnemba", desc:"Snorkel e águas cristalinas.", type:"zanzibar" },
+    { id:14, d:"16", m:"Jun", loc:"ZNZ ➔ Dar Es Salaam", sub:"Início do Retorno", lod:"Aeroporto", voo:"Voo TC105 | 22:00h",
