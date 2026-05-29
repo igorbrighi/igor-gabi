@@ -3,141 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Lua de Mel · Tanzânia & Zanzibar</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<title>Igor & Gabi · Tanzânia & Zanzibar 2026</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tanzânia 2026">
+<meta name="theme-color" content="#2E5A44">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Tanz%C3%A2nia+2026%22%2C%22short_name%22%3A%22Tanz%C3%A2nia+2026%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23FDFBF8%22%2C%22theme_color%22%3A%22%232E5A44%22%7D">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
-:root {
-  --safari: #2E5A44; --savannah: #C87A3E; --ocean: #1F6E8C; --gold: #D4AF37;
-  --bg: #FDFBF8; --card: #FFFFFF; --text: #2C2520; --muted: #7A6F66;
-  --shadow: rgba(44, 37, 32, 0.08); --r: 16px;
+:root{
+  --sand:#FDFBF8;--sand-d:#EFECE6;--terr:#C87A3E;--ocean:#2E5A44;--ocean-m:#3D7559;--ocean-l:#E6F0EA;
+  --sage:#557A46;--gold:#D4AF37;--gold-l:#F3E5AB;--ink:#2C2520;--ink-m:#554B43;--ink-l:#8A7E74;
+  --white:#FFFFFF;--sh:rgba(44,37,32,0.06);--shl:rgba(44,37,32,0.12);--r:16px;--rs:12px
 }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);min-height:100vh;padding-bottom:68px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--ocean);height:52px;display:flex;align-items:center;padding:0 14px;box-shadow:0 2px 12px var(--shl)}
+.nav-title{font-family:'Cormorant Garamond',serif;color:var(--sand);font-size:17px;font-weight:400;letter-spacing:.04em}
+.nav-title span{color:var(--gold-l);font-style:italic}
+.tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--white);border-top:1px solid var(--sand-d);display:flex;height:60px;box-shadow:0 -2px 12px var(--sh)}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;border:none;background:none;padding:0}
+.tab-item .ti{font-size:20px;line-height:1;transition:transform .15s}
+.tab-item .tl{font-size:10px;color:var(--ink-l);letter-spacing:.02em}
+.tab-item.active .ti{transform:scale(1.12)}
+.tab-item.active .tl{color:var(--ocean);font-weight:700}
+.view{display:none;padding:64px 12px 20px;max-width:600px;margin:0 auto}
+.view.active{display:block}
+#view-map{padding:0;max-width:600px;margin:0 auto}
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+/* Trip header */
+.trip-hdr{background:linear-gradient(135deg,var(--ocean),#1B3B2B);border-radius:var(--r);padding:20px;color:var(--sand);margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 4px 15px var(--sh)}
+.trip-hdr h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;letter-spacing:.02em;margin-bottom:4px}
+.trip-dates{font-size:12px;color:var(--ocean-l);margin-bottom:14px}
+.trip-stats{display:flex;gap:16px}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--gold-l);line-height:1}
+.stat-lbl{font-size:10px;color:var(--ocean-l);margin-top:1px;text-transform:uppercase;letter-spacing:.07em}
+.cd-box{background:rgba(255,255,255,.08);backdrop-filter:blur(4px);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.cd-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--gold-l)}
+.cd-lbl{font-size:10px;color:var(--ocean-l);text-transform:uppercase;letter-spacing:.07em}
 
-/* Navegação Superior */
-.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(253, 251, 248, 0.9); backdrop-filter: blur(10px); height: 60px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-.nav-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--safari); }
-.nav-title span { color: var(--gold); font-style: italic; }
+/* Alerts */
+.a-urg,.alert-urgent{background:linear-gradient(135deg,#9E4A25,var(--terr));border-radius:var(--rs);padding:12px 14px;color:var(--white);margin-bottom:8px;display:flex;gap:10px}
+.a-urg .icon,.alert-urgent .icon{font-size:18px;flex-shrink:0}
+.a-urg .title,.alert-urgent .title{font-weight:500;font-size:13px;margin-bottom:2px}
+.a-urg .desc,.alert-urgent .desc{font-size:12px;opacity:.9;line-height:1.4}
+.abox{border-radius:var(--rs);padding:10px 12px;font-size:12px;line-height:1.5;margin-bottom:8px;border-left:3px solid}
+.abox.green{background:#F4F8F3;border-color:var(--sage);color:#2E4425}
+.abox.blue{background:#EBF3F6;border-color:var(--ocean-m);color:#1A3B2B}
+.abox.amber{background:#FDF9F0;border-color:var(--gold);color:#5A4000}
 
-/* Tabs Inferiores */
-.tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; background: white; display: flex; height: 70px; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid rgba(0,0,0,0.05); box-shadow: 0 -4px 20px var(--shadow); }
-.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: none; border: none; cursor: pointer; color: var(--muted); transition: 0.3s; }
-.tab-item.active { color: var(--safari); font-weight: 700; }
-.tab-item i { font-size: 22px; margin-bottom: 2px; }
-.tab-item span { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+/* Dest blocks & Cards */
+.dest-blk{margin-bottom:18px}
+.dest-lbl{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.dest-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--ocean)}
+.dest-line{flex:1;height:1px;background:var(--sand-d)}
+.dest-dates{font-size:11px;color:var(--ink-l);white-space:nowrap}
+.days-grid{display:flex;flex-direction:column;gap:8px}
 
-/* Conteúdo */
-.view { display: none; padding: 80px 20px 100px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.4s ease; }
-.view.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* Day card */
+.day-card{background:var(--white);border-radius:var(--rs);padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;border:1px solid rgba(0,0,0,0.02);transition:all .2s;box-shadow:0 4px 10px var(--sh)}
+.day-card:active{transform:scale(.98);background:var(--sand-d)}
+.day-num{width:38px;height:38px;border-radius:50%;background:var(--ocean-l);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(46,90,68,0.15)}
+.dn-n{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;line-height:1;color:var(--ocean)}
+.dn-m{font-size:8px;text-transform:uppercase;letter-spacing:.05em;color:var(--ocean-m)}
+.day-info{flex:1;min-width:0}
+.day-tt{font-weight:700;font-size:14px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day-sub{font-size:12px;color:var(--ink-l);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.dtag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500}
+.dtag.boat{background:#E3F2FD;color:#1565C0}.dtag.food{background:#FFF3E0;color:#E65100}
+.dtag.hike{background:#E8F5E9;color:#2E7D32}.dtag.view{background:#F3E5F5;color:#6A1B9A}
+.dtag.star{background:#FFFDE7;color:#F57F17}.dtag.couple{background:#FCE4EC;color:#C2185B}
 
-/* Cards */
-.category-hdr { margin-bottom: 20px; }
-.category-hdr h2 { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--safari); }
-.category-hdr p { font-size: 14px; color: var(--muted); }
+/* Modal e Bottom Sheet */
+.modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); backdrop-filter:blur(3px); z-index:299; opacity:0; transition:opacity 0.3s ease }
+.modal-backdrop.open { display:block; opacity:1 }
+.modal{position:fixed;left:0;right:0;bottom:-100%;z-index:300;background:none;transition:bottom 0.4s cubic-bezier(0.15, 0.85, 0.35, 1);display:block !important; pointer-events:none}
+.modal.open{bottom:0; pointer-events:auto}
+.bs{background:var(--sand);border-radius:24px 24px 0 0;padding:24px 18px 40px;box-shadow:0 -10px 30px rgba(0,0,0,0.15);max-height:85vh;overflow-y:auto}
+.bs-handle{width:36px;height:4px;background:var(--ink-l);opacity:0.3;border-radius:2px;margin:0 auto 16px}
 
-.day-card { background: var(--card); border-radius: var(--r); padding: 18px; margin-bottom: 12px; box-shadow: 0 4px 15px var(--shadow); display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(0,0,0,0.02); }
-.day-card:active { transform: scale(0.97); }
-.day-date-circle { width: 50px; height: 50px; border-radius: 50%; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--gold); }
-.day-date-circle .d { font-weight: 700; font-size: 16px; color: var(--safari); line-height: 1; }
-.day-date-circle .m { font-size: 9px; text-transform: uppercase; color: var(--muted); }
-.day-content { flex: 1; }
-.day-content h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
-.day-content p { font-size: 12px; color: var(--muted); }
+.dd-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.back-btn{width:40px;height:40px;background:var(--white);border:1px solid var(--sand-d);border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 5px var(--sh)}
+.dd-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ocean);line-height:1.2}
+.dd-date{font-size:12px;color:var(--ink-l);margin-top:2px}
 
-/* Bottom Sheet (Abertura de Informações) */
-.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px); }
-.overlay.active { opacity: 1; visibility: visible; }
-.bottom-sheet { position: fixed; left: 0; right: 0; bottom: -100%; background: var(--bg); z-index: 2001; border-radius: 24px 24px 0 0; padding: 30px 20px; transition: 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
-.bottom-sheet.active { bottom: 0; }
-.sheet-handle { width: 40px; height: 5px; background: #DDD; border-radius: 10px; margin: -15px auto 20px; }
+.plan-box{background:var(--white);border:1px solid var(--gold);border-radius:var(--rs);padding:14px;margin-bottom:14px;box-shadow:0 2px 8px var(--sh)}
+.plan-ttl{font-size:11px;color:var(--terr);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:10px}
+.plan-btns{display:flex;flex-direction:column;gap:8px}
+.plan-btn{padding:12px;border-radius:var(--rs);border:1px solid var(--sand-d);background:var(--sand);cursor:pointer;font-family:inherit;font-size:13px;text-align:left;transition:all 0.2s}
+.plan-btn.sel{background:var(--ocean);border-color:var(--ocean);color:var(--white);font-weight:500}
 
-/* Detalhes dentro da Sheet */
-.detail-tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 10px; }
-.tag-safari { background: #E6F0EA; color: var(--safari); }
-.tag-flight { background: #E1EDF2; color: var(--ocean); }
-.tag-lod { background: #F9F1E6; color: var(--savannah); }
-.detail-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-bottom: 15px; }
-.info-box { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 3px solid var(--gold); }
-.info-box label { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 700; display: block; margin-bottom: 5px; }
+.stop{background:var(--white);border-radius:var(--rs);padding:14px;margin-bottom:10px;border-left:4px solid var(--sand-d);box-shadow:0 2px 6px var(--sh);transition:all 0.2s}
+.stop.type-boat{border-left-color:#1565C0}.stop.type-food{border-left-color:#E65100}
+.stop.type-view,.stop.type-info{border-left-color:var(--ocean)}.stop.type-nature{border-left-color:var(--sage)}
+.stop.type-star{border-left-color:var(--gold)}.stop.type-couple{border-left-color:#C2185B}
+.stop-hdr{display:flex;align-items:flex-start;gap:10px}
+.stop-time{font-size:11px;color:var(--ink-l);font-weight:700;background:var(--sand-d);padding:2px 6px;border-radius:4px}
+.stop-name{font-weight:700;font-size:14px;flex:1;color:var(--ink)}
+.stop-desc{font-size:13px;color:var(--ink-m);line-height:1.5;margin:8px 0}
+.abox{border-radius:var(--rs);padding:10px 12px;font-size:12px;line-height:1.5;margin-bottom:8px;border-left:3px solid}
+.abox.blue{background:#EBF3F6;border-color:var(--ocean-m);color:#1A3B2B}
 
-/* Aba Mapa */
-#map { height: calc(100vh - 130px); width: 100%; border-radius: 12px; z-index: 1; }
+/* Checklist */
+.prog-bar{height:6px;border-radius:3px;background:var(--sand-d);margin-bottom:6px;overflow:hidden}
+.prog-fill{height:100%;background:var(--sage);transition:width .4s}
+.prog-txt{font-size:12px;color:var(--ink-l);margin-bottom:16px}
+.cl-grp{margin-bottom:25px}
+.cl-grp-ttl{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--ocean);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.cl-grp-ttl::after{content:'';flex:1;height:1px;background:var(--sand-d)}
+.cl-item{background:var(--white);border-radius:var(--rs);padding:14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;box-shadow:0 2px 6px var(--sh)}
+.cl-item.done{opacity:.5}
+.cl-chk{width:24px;height:24px;border-radius:6px;border:1.5px solid var(--sand-d);cursor:pointer;display:flex;align-items:center;justify-content:center;background:none;font-size:12px;color:transparent}
+.cl-chk.chk{background:var(--sage);border-color:var(--sage);color:white}
+.cl-cont{flex:1;min-width:0}
+.cl-title{font-weight:700;font-size:14px}
+
+/* Mapa */
+#map-toolbar{position:fixed;top:52px;left:0;right:0;z-index:100;background:var(--white);border-bottom:1px solid var(--sand-d);padding:10px 12px;box-shadow:0 2px 8px var(--sh)}
+.chips-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chip{border:1px solid var(--sand-d);background:var(--white);border-radius:20px;padding:6px 14px;font-size:12px;white-space:nowrap;cursor:pointer;color:var(--ink-m);font-weight:500}
+.chip.active{background:var(--ocean);color:var(--white);border-color:var(--ocean)}
+#leaflet-map{width:100%;height:calc(100dvh - 164px);margin-top:104px;z-index:1}
 
 /* Swahili */
-.frase-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; position: relative; border: 1px solid rgba(0,0,0,0.03); }
-.frase-item:active { background: #F9F1E6; }
-.frase-sw { font-weight: 700; color: var(--safari); font-size: 16px; }
-.frase-pt { color: var(--text); font-size: 14px; margin-top: 2px; }
-</style>
-</head>
-<body>
-
-<nav class="nav">
-  <div class="nav-title">Lua de Mel · <span>Tanzânia & Zanzibar</span></div>
-</nav>
-
-<main id="view-safari" class="view active">
-  <div class="category-hdr">
-    <h2>Safaris & Parques</h2>
-    <p>A jornada selvagem pela Tanzânia</p>
-  </div>
-  <div id="grid-safari"></div>
-</main>
-
-<main id="view-zanzibar" class="view">
-  <div class="category-hdr">
-    <h2>Zanzibar</h2>
-    <p>O paraíso turquesa do Índico</p>
-  </div>
-  <div id="grid-zanzibar"></div>
-</main>
-
-<main id="view-map" class="view" style="padding: 70px 0 0 0;">
-  <div id="map"></div>
-</main>
-
-<main id="view-swahili" class="view">
-  <div class="category-hdr">
-    <h2>Swahili</h2>
-    <p>Expressões para o dia a dia</p>
-  </div>
-  <div id="grid-swahili"></div>
-</main>
-
-<nav class="tab-bar">
-  <button class="tab-item active" onclick="showTab('safari')"><i>🦁</i><span>Safari</span></button>
-  <button class="tab-item" onclick="showTab('zanzibar')"><i>🏖️</i><span>Zanzibar</span></button>
-  <button class="tab-item" onclick="showTab('map')"><i>🗺️</i><span>Mapa</span></button>
-  <button class="tab-item" onclick="showTab('swahili')"><i>🗣️</i><span>Frases</span></button>
-</nav>
-
-<div id="overlay" class="overlay" onclick="closeSheet()"></div>
-<div id="bottom-sheet" class="bottom-sheet">
-  <div class="sheet-handle"></div>
-  <div id="sheet-content"></div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-// Dados da Planilha [cite: 1, 2]
-const ITINERARIO = {
-  safari: [
-    { id:1, d:"03", m:"Jun", loc:"POA ➔ São Paulo", sub:"Início da Jornada", lod:"Casa de Amigos", voo:"G3 1239 | Reserva: CDQLXN", desc:"Partida 18:35h de Porto Alegre. Noite em SP.", type:"flight" },
-    { id:2, d:"04", m:"Jun", loc:"SP ➔ Joanesburgo", sub:"Voo Internacional", lod:"Pernoite Voo", voo:"Reserva: CTCRWA | Partida 17:05h", desc:"Longa distância rumo à África.", type:"flight" },
-    { id:3, d:"05", m:"Jun", loc:"Chegada Dar Es Salaam", sub:"Conexão Tanzânia", lod:"Transit Airport B&B", voo:"Voo TC209 | Partida 14:15h", desc:"Chegada e descanso para o safari.", type:"flight" },
-    { id:4, d:"06", m:"Jun", loc:"Parque Tarangire", sub:"O reino dos elefantes", lod:"Suricata Boma Lodge", saf:"Tarangire National Park", voo:"Voo TC134 | 05:00h", desc:"Voo para Kilimanjaro e primeiro safari.", type:"safari" },
-    { id:5, d:"07", m:"Jun", loc:"Serengeti", sub:"As planícies infinitas", lod:"Matawi Serengeti Camp", saf:"Serengeti (Game Drive)", desc:"Entrada no parque mais famoso do mundo.", type:"safari" },
-    { id:6, d:"08", m:"Jun", loc:"Serengeti Total", sub:"Vida selvagem", lod:"Matawi Serengeti Camp", saf:"Serengeti (Dia Inteiro)", desc:"Em busca dos Big Five.", type:"safari" },
-    { id:7, d:"09", m:"Jun", loc:"Serengeti ➔ Ngorongoro", sub:"Transição", lod:"Ang'ata Ngorongoro", saf:"Serengeti (Game Drive)", desc:"Deslocamento para a Cratera.", type:"safari" },
-    { id:8, d:"10", m:"Jun", loc:"Cratera Ngorongoro", sub:"O Jardim do Éden", lod:"Suricata Boma Lodge", saf:"Ngorongoro Crater", desc:"Descida ao interior da cratera intacta.", type:"safari" }
-  ],
-  zanzibar: [
-    { id:9, d:"11", m:"Jun", loc:"Manyara ➔ Zanzibar", sub:"Voo para o mar", lod:"Bamboo", saf:"Lake Manyara Park", voo:"TC105 | 20:30h", desc:"Último safari e voo para Zanzibar.", type:"flight" },
-    { id:10, d:"12", m:"Jun", loc:"Relax no Bamboo", sub:"Descanso total", lod:"Bamboo Zanzibar", desc:"Dia de curtir o resort.", type:"zanzibar" },
-    { id:11, d:"13", m:"Jun", loc:"Nungwi", sub:"Norte da Ilha", lod:"Zava Nungwi", desc:"Aproveitar as praias de areia branca.", type:"zanzibar" },
-    { id:12, d:"14", m:"Jun", loc:"Mergulho 🤿", sub:"Kendwa/Nungwi", lod:"Zava Nungwi", pass:"Mergulho às 07:30h", desc:"Explorar o recife de corais.", type:"zanzibar" },
-    { id:13, d:"15", m:"Jun", loc:"Mnemba Island", sub:"Passeio de Barco", lod:"Shaba Boutique", pass:"Atol de Mnemba", desc:"Snorkel e águas cristalinas.", type:"zanzibar" },
-    { id:14, d:"16", m:"Jun", loc:"ZNZ ➔ Dar Es Salaam", sub:"Início do Retorno", lod:"Aeroporto", voo:"Voo TC105 | 22:00h",
+.frases-list { display: flex; flex-direction
