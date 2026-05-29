@@ -140,7 +140,73 @@ body.theme-frases .nav { background: #7A6118; }
 .map-marker { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 2px solid var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.25); cursor: pointer; }
 .map-marker.safari-mk { background: var(--savannah); }
 .map-marker.zanzibar-mk { background: var(--zanzibar-blue); }
+
+/* === 5-TAB SIZING === */
+.tab-item .ti { font-size: 16px; }
+.tab-item .tl { font-size: 9px; }
+.tab-item.active.lista::after { background: var(--safari-green); opacity: 1; }
+.tab-item.active.lista .tl { color: var(--safari-green); }
+.tab-item.active.info::after { background: var(--zanzibar-blue); opacity: 1; }
+.tab-item.active.info .tl { color: var(--zanzibar-blue); }
+body.theme-lista .nav { background: var(--safari-green); }
+body.theme-info .nav { background: var(--zanzibar-blue); }
+
+/* === TODAY HIGHLIGHT === */
+.day-row.today { border-color: var(--gold) !important; box-shadow: 0 0 0 2px rgba(212,175,55,0.25), 0 4px 14px rgba(212,175,55,0.12); }
+.day-row.today > .day-card { background: #FFFEF5; }
+.today-badge { background: var(--gold); color: #fff; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 2px 7px; border-radius: 20px; margin-left: 6px; display: inline-block; vertical-align: middle; }
+
+/* === NOTES === */
+.notes-wrap { margin-top: 10px; grid-column: 1 / -1; }
+.notes-label { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; margin-bottom: 6px; color: var(--ink-muted); display: flex; align-items: center; gap: 4px; }
+.notes-area { width: 100%; min-height: 80px; border: 1px solid var(--border-color); border-radius: var(--rs); padding: 10px 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink-dark); background: #FFFEF8; resize: vertical; outline: none; line-height: 1.6; transition: border-color 0.2s; }
+.notes-area:focus { border-color: var(--gold); background: #fff; }
+.notes-area::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* === CHECKLIST === */
+body.theme-lista { background-color: #EFF5F1; }
+.checklist-section { background: var(--white); border-radius: var(--r); margin-bottom: 16px; overflow: hidden; box-shadow: 0 3px 10px var(--sh); border: 1px solid var(--border-color); }
+.check-hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
+.check-hdr-title { font-weight: 700; font-size: 15px; color: var(--ink-dark); }
+.check-count { font-size: 11px; font-weight: 700; color: var(--white); background: var(--safari-green); padding: 3px 10px; border-radius: 20px; }
+.check-item { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; }
+.check-item:last-child { border-bottom: none; }
+.check-item.done { background: #F6FAF7; }
+.check-label { flex: 1; display: flex; align-items: center; gap: 10px; cursor: pointer; min-width: 0; }
+.check-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--safari-green); flex-shrink: 0; cursor: pointer; }
+.check-text { font-size: 14px; color: var(--ink-dark); line-height: 1.4; }
+.check-item.done .check-text { text-decoration: line-through; color: var(--ink-muted); }
+.check-del { background: none; border: none; color: #CCC; font-size: 20px; cursor: pointer; padding: 0 2px; line-height: 1; transition: color 0.15s; flex-shrink: 0; }
+.check-del:active { color: #D44; }
+.check-add-row { display: flex; gap: 8px; padding: 12px 16px; background: var(--bg-sand); }
+.check-add-input { flex: 1; border: 1px solid var(--border-color); border-radius: var(--rs); padding: 9px 12px; font-family: inherit; font-size: 14px; outline: none; background: var(--white); transition: border-color 0.2s; }
+.check-add-input:focus { border-color: var(--safari-green); }
+.check-add-btn { width: 38px; height: 38px; border-radius: var(--rs); background: var(--safari-green); color: var(--white); border: none; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity 0.15s; }
+.check-add-btn:active { opacity: 0.8; }
+
+/* === INFO === */
+body.theme-info { background-color: #EBF3F7; }
+.info-section { margin-bottom: 20px; }
+.info-section-title { font-size: 11px; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+.clock-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.clock-card { background: var(--white); border-radius: var(--r); padding: 14px 8px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 3px 8px var(--sh); }
+.clock-flag { font-size: 22px; margin-bottom: 2px; }
+.clock-city { font-size: 10px; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.clock-time { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--ink-dark); letter-spacing: 0.02em; line-height: 1.2; }
+.clock-date { font-size: 10px; color: var(--ink-muted); margin-top: 2px; }
+.clock-tz { font-size: 10px; color: var(--zanzibar-blue); font-weight: 600; margin-top: 4px; }
+.rate-note { font-size: 12px; color: var(--ink-muted); margin-bottom: 10px; }
+.rate-link { color: var(--zanzibar-blue); text-decoration: none; font-weight: 600; }
+.rate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rate-card { background: var(--white); border-radius: var(--r); padding: 14px; border: 1px solid var(--border-color); box-shadow: 0 3px 8px var(--sh); }
+.rate-pair { font-size: 11px; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.rate-val { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--safari-green); }
+.rate-sub { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+.tip-card { background: var(--white); border-radius: var(--rs); padding: 14px 16px; margin-bottom: 10px; border: 1px solid var(--border-color); border-left: 4px solid var(--gold); box-shadow: 0 2px 6px var(--sh); }
+.tip-title { font-weight: 700; font-size: 13px; color: var(--ink-dark); margin-bottom: 6px; }
+.tip-body { font-size: 13px; color: #3A332E; line-height: 1.6; }
 </style>
+
 </head>
 <body class="theme-roteiro">
 <nav class="nav">
@@ -173,6 +239,134 @@ body.theme-frases .nav { background: #7A6118; }
   <div id="grid-zanzibar" class="zanzibar-section"></div>
 </main>
 
+<main class="view view-lista" id="view-lista">
+  <div class="trip-hdr">
+    <div class="trip-hdr-bg" style="background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&q=80');"></div>
+    <div class="trip-hdr-overlay"></div>
+    <div class="trip-hdr-content">
+      <h2>✅ Checklist</h2>
+      <p class="trip-subtitle">O que levar · O que trazer de volta</p>
+    </div>
+  </div>
+
+  <div class="checklist-section">
+    <div class="check-hdr">
+      <div class="check-hdr-title">🎒 O que Levar</div>
+      <span class="check-count" id="check-count-levar">0/0</span>
+    </div>
+    <div id="check-levar"></div>
+    <div class="check-add-row">
+      <input type="text" class="check-add-input" id="check-input-levar"
+        placeholder="Adicionar item…"
+        onkeydown="if(event.key==='Enter')addCheck('levar')">
+      <button class="check-add-btn" onclick="addCheck('levar')">+</button>
+    </div>
+  </div>
+
+  <div class="checklist-section">
+    <div class="check-hdr">
+      <div class="check-hdr-title">🛍️ O que Trazer de Volta</div>
+      <span class="check-count" id="check-count-trazer">0/0</span>
+    </div>
+    <div id="check-trazer"></div>
+    <div class="check-add-row">
+      <input type="text" class="check-add-input" id="check-input-trazer"
+        placeholder="Adicionar item…"
+        onkeydown="if(event.key==='Enter')addCheck('trazer')">
+      <button class="check-add-btn" onclick="addCheck('trazer')">+</button>
+    </div>
+  </div>
+</main>
+
+<main class="view view-info" id="view-info">
+  <div class="trip-hdr">
+    <div class="trip-hdr-bg" style="background-image: url('https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200&q=80');"></div>
+    <div class="trip-hdr-overlay"></div>
+    <div class="trip-hdr-content">
+      <h2>ℹ️ Informações</h2>
+      <p class="trip-subtitle">Câmbio · Fusos · Dicas Úteis</p>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-section-title">🕐 Fusos Horários</div>
+    <div class="clock-grid">
+      <div class="clock-card">
+        <div class="clock-flag">🇧🇷</div>
+        <div class="clock-city">São Paulo</div>
+        <div class="clock-time" id="clock-sp">--:--</div>
+        <div class="clock-date" id="date-sp">---</div>
+        <div class="clock-tz">UTC−3</div>
+      </div>
+      <div class="clock-card">
+        <div class="clock-flag">🇿🇦</div>
+        <div class="clock-city">Joanesburgo</div>
+        <div class="clock-time" id="clock-jnb">--:--</div>
+        <div class="clock-date" id="date-jnb">---</div>
+        <div class="clock-tz">UTC+2 · +5h SP</div>
+      </div>
+      <div class="clock-card">
+        <div class="clock-flag">🇹🇿</div>
+        <div class="clock-city">Tanzânia</div>
+        <div class="clock-time" id="clock-dar">--:--</div>
+        <div class="clock-date" id="date-dar">---</div>
+        <div class="clock-tz">UTC+3 · +6h SP</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-section-title">💱 Câmbio Aproximado</div>
+    <div class="rate-note">Valores indicativos · <a href="https://www.google.com/search?q=USD+TZS+today" target="_blank" class="rate-link">Atualizar no Google ↗</a></div>
+    <div class="rate-grid">
+      <div class="rate-card">
+        <div class="rate-pair">USD → TZS</div>
+        <div class="rate-val">≈ 2.600</div>
+        <div class="rate-sub">1 dólar = 2.600 xelins</div>
+      </div>
+      <div class="rate-card">
+        <div class="rate-pair">BRL → USD</div>
+        <div class="rate-val">≈ US$ 0,17</div>
+        <div class="rate-sub">1 real = 0,17 dólar</div>
+      </div>
+      <div class="rate-card">
+        <div class="rate-pair">BRL → TZS</div>
+        <div class="rate-val">≈ 450</div>
+        <div class="rate-sub">1 real = 450 xelins</div>
+      </div>
+      <div class="rate-card">
+        <div class="rate-pair">USD → BRL</div>
+        <div class="rate-val">≈ R$ 5,80</div>
+        <div class="rate-sub">1 dólar = 5,80 reais</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-section-title">📋 Dicas Úteis</div>
+    <div class="tip-card">
+      <div class="tip-title">📞 Emergências na Tanzânia</div>
+      <div class="tip-body">Polícia: <strong>112</strong> · Ambulância: <strong>115</strong> · Bombeiros: <strong>114</strong></div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-title">💊 Saúde</div>
+      <div class="tip-body">Tomar antimalárico conforme prescrição. Usar repelente ao amanhecer e anoitecer. Beber apenas água engarrafada.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-title">💵 Dinheiro</div>
+      <div class="tip-body">USD aceito em hotéis e parques nacionais. TZS para mercados locais. ATMs disponíveis em Dar es Salaam e Stone Town.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-title">👗 Vestuário</div>
+      <div class="tip-body">Safari: tons neutros (kaki, bege, verde). Stone Town: cobrir ombros e joelhos por respeito à cultura islâmica local.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-title">🔌 Tomadas</div>
+      <div class="tip-body">Tanzânia usa Tipo G (padrão Reino Unido). Voltagem: 230V. Levar adaptador universal.</div>
+    </div>
+  </div>
+</main>
+
 <main class="view view-frases" id="view-frases">
   <div class="trip-hdr">
     <div class="trip-hdr-bg" style="background-image: url('https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200&q=80');"></div>
@@ -198,6 +392,12 @@ body.theme-frases .nav { background: #7A6118; }
 <nav class="tab-bar">
   <button class="tab-item active roteiro" onclick="showView('roteiro')">
     <span class="ti">🗓️</span><span class="tl">Roteiro</span>
+  </button>
+  <button class="tab-item lista" onclick="showView('lista')">
+    <span class="ti">✅</span><span class="tl">Lista</span>
+  </button>
+  <button class="tab-item info" onclick="showView('info')">
+    <span class="ti">ℹ️</span><span class="tl">Info</span>
   </button>
   <button class="tab-item frases" onclick="showView('frases')">
     <span class="ti">🗣️</span><span class="tl">Swahili</span>
@@ -321,6 +521,8 @@ function showView(viewId) {
   document.querySelector('.tab-bar .tab-item.' + viewId).classList.add('active');
   document.body.className = 'theme-' + viewId;
   window.scrollTo(0, 0);
+  stopClock();
+  if (viewId === 'info') startClock();
   if (viewId === 'mapa') {
     if (!window._mapInitialized) {
       window._mapInitialized = true;
@@ -345,11 +547,14 @@ function renderGrid(categoria) {
   const grid = document.getElementById('grid-' + categoria);
   grid.innerHTML = '';
 
+  const today = new Date();
+  const todayStr = `${String(today.getDate()).padStart(2,'0')}/${String(today.getMonth()+1).padStart(2,'0')}`;
+
   ITINERARIO[categoria].forEach((dia, idx) => {
     const [d, m] = dia.data.split('/');
     const nomeMes = m === '06' ? 'Jun' : 'Mai';
+    const isToday = dia.data === todayStr;
 
-    // Count info blocks for grid layout decision
     const blocks = [];
     blocks.push(`<div class="info-block lod-s full">
       <div class="block-ttl">🏨 Hospedagem</div>
@@ -375,14 +580,13 @@ function renderGrid(categoria) {
       </div>`);
     }
 
-    // If only 1 extra block (besides lodging), make it full-width too
     const extraBlocks = blocks.slice(1);
     const gridBlocks = extraBlocks.length === 1
       ? [blocks[0], extraBlocks[0].replace('class="info-block', 'class="info-block full')]
       : [blocks[0], ...extraBlocks];
 
     const row = document.createElement('div');
-    row.className = 'day-row';
+    row.className = 'day-row' + (isToday ? ' today expanded' : '');
     row.id = `day-row-${categoria}-${idx}`;
     row.innerHTML = `
       <div class="day-card" onclick="toggleDay('${categoria}', ${idx})">
@@ -391,15 +595,21 @@ function renderGrid(categoria) {
           <span class="dn-m">${nomeMes}</span>
         </div>
         <div class="day-info">
-          <div class="day-tt">${dia.local}</div>
+          <div class="day-tt">${dia.local}${isToday ? ' <span class="today-badge">Hoje</span>' : ''}</div>
           <div class="day-sub">${dia.sub}</div>
         </div>
         <span class="chevron">▾</span>
       </div>
       <div class="day-detail">
         <div class="info-grid">${gridBlocks.join('')}</div>
+        <div class="notes-wrap">
+          <div class="notes-label">📓 Diário de Bordo</div>
+          <textarea class="notes-area" placeholder="Anotações do dia — clique para escrever…" oninput="saveNote('${categoria}',${idx},this.value)"></textarea>
+        </div>
       </div>
     `;
+    const ta = row.querySelector('.notes-area');
+    if (ta) ta.value = loadNote(categoria, idx);
     grid.appendChild(row);
   });
 }
@@ -452,12 +662,150 @@ function renderCountdown() {
   }
 }
 
+// ── NOTES / DIARY ─────────────────────────────────────────────────────────
+const NOTE_DEFAULTS = {
+  'safari-0': '✈️ Comi o cu de quem tá lendo 🌍🦁'
+};
+
+function loadNote(categoria, idx) {
+  const key = `igo-note-${categoria}-${idx}`;
+  return localStorage.getItem(key) || NOTE_DEFAULTS[`${categoria}-${idx}`] || '';
+}
+function saveNote(categoria, idx, text) {
+  localStorage.setItem(`igo-note-${categoria}-${idx}`, text);
+}
+
+// ── CHECKLIST ─────────────────────────────────────────────────────────────
+const CHECKLIST_DEFAULTS = {
+  levar: [
+    "Passaporte",
+    "Comprovante de visto para Tanzânia",
+    "Seguro viagem (impresso + digital)",
+    "Carregador universal + adaptador Tipo G",
+    "Power bank",
+    "Câmera fotográfica + cartão de memória extra",
+    "Protetor solar FPS 50+",
+    "Repelente de insetos",
+    "Antimalárico (conforme prescrição médica)",
+    "Carteira de vacinação (febre amarela)",
+    "Roupas leves em tons neutros (safari)",
+    "Chapéu de aba larga",
+    "Óculos de sol",
+    "Tênis fechado para trilha / safari",
+    "Sandálias e chinelos",
+    "Biquíni / sunga",
+    "Kit primeiros socorros",
+    "Dinheiro em USD em espécie",
+    "Cartão de crédito internacional",
+    "Lanterna de cabeça"
+  ],
+  trazer: [
+    "Arte Tingatinga (pintura local)",
+    "Especiarias de Zanzibar",
+    "Kangas / tecidos coloridos",
+    "Lembrança de animais do safari",
+    "Café tanzaniano"
+  ]
+};
+
+function _loadChecklistData() {
+  const saved = localStorage.getItem('igo-checklist');
+  if (saved) return JSON.parse(saved);
+  const data = { levar: [], trazer: [] };
+  CHECKLIST_DEFAULTS.levar.forEach((label, i) =>
+    data.levar.push({ id: 'l' + i, label, checked: false }));
+  CHECKLIST_DEFAULTS.trazer.forEach((label, i) =>
+    data.trazer.push({ id: 't' + i, label, checked: false }));
+  localStorage.setItem('igo-checklist', JSON.stringify(data));
+  return data;
+}
+function _saveChecklistData(data) {
+  localStorage.setItem('igo-checklist', JSON.stringify(data));
+}
+function renderChecklist() {
+  const data = _loadChecklistData();
+  ['levar', 'trazer'].forEach(sec => {
+    const container = document.getElementById('check-' + sec);
+    if (!container) return;
+    container.innerHTML = '';
+    data[sec].forEach((item, idx) => {
+      const el = document.createElement('div');
+      el.className = 'check-item' + (item.checked ? ' done' : '');
+      el.innerHTML = `
+        <label class="check-label">
+          <input type="checkbox" ${item.checked ? 'checked' : ''}
+            onchange="toggleCheck('${sec}',${idx},this.checked)">
+          <span class="check-text">${item.label}</span>
+        </label>
+        <button class="check-del" onclick="deleteCheck('${sec}',${idx})" aria-label="Remover">×</button>
+      `;
+      container.appendChild(el);
+    });
+    const done = data[sec].filter(i => i.checked).length;
+    const counter = document.getElementById('check-count-' + sec);
+    if (counter) counter.textContent = `${done}/${data[sec].length}`;
+  });
+}
+function toggleCheck(sec, idx, checked) {
+  const data = _loadChecklistData();
+  data[sec][idx].checked = checked;
+  _saveChecklistData(data);
+  renderChecklist();
+}
+function deleteCheck(sec, idx) {
+  const data = _loadChecklistData();
+  data[sec].splice(idx, 1);
+  _saveChecklistData(data);
+  renderChecklist();
+}
+function addCheck(sec) {
+  const input = document.getElementById('check-input-' + sec);
+  const label = (input.value || '').trim();
+  if (!label) return;
+  const data = _loadChecklistData();
+  data[sec].push({ id: sec[0] + Date.now(), label, checked: false });
+  _saveChecklistData(data);
+  input.value = '';
+  renderChecklist();
+}
+
+// ── CLOCKS ────────────────────────────────────────────────────────────────
+let _clockInterval = null;
+function startClock() {
+  updateClocks();
+  _clockInterval = setInterval(updateClocks, 1000);
+}
+function stopClock() {
+  clearInterval(_clockInterval);
+  _clockInterval = null;
+}
+function updateClocks() {
+  const now = new Date();
+  const local = tz => new Date(now.toLocaleString('en-US', { timeZone: tz }));
+  const sp  = local('America/Sao_Paulo');
+  const jnb = local('Africa/Johannesburg');
+  const dar = local('Africa/Dar_es_Salaam');
+  const fmtT = d => d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const fmtD = d => d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+  const s = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  s('clock-sp',  fmtT(sp));  s('date-sp',  fmtD(sp));
+  s('clock-jnb', fmtT(jnb)); s('date-jnb', fmtD(jnb));
+  s('clock-dar', fmtT(dar)); s('date-dar', fmtD(dar));
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
 (() => {
   renderGrid('safari');
   renderGrid('zanzibar');
   renderFrases(FRASES);
   renderCountdown();
+  renderChecklist();
+  requestAnimationFrame(() => {
+    const todayRow = document.querySelector('.day-row.today');
+    if (todayRow) todayRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
 })();
+
 
 // ── MAP ──────────────────────────────────────────────────────────────────────
 
