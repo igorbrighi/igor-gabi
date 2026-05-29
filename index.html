@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="Igor & Gabi">
 <meta name="theme-color" content="#2E5A44">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root {
   --bg-sand: #FAF8F5;
@@ -22,160 +24,186 @@
   --ink-muted: #8A8073;
   --white: #FFFFFF;
   --sh: rgba(44, 37, 32, 0.04);
-  --sh-hover: rgba(44, 37, 32, 0.08);
   --r: 16px;
   --rs: 10px;
-
-  /* Cores temáticas de fundo para a página principal */
-  --bg-safari-theme: #FAF5EE;   /* Areia quente / Savana */
-  --bg-zanzibar-theme: #EAF3F7; /* Azul piscina / Mar tropical */
+  --bg-safari-theme: #F5EFE6;
+  --bg-zanzibar-theme: #E8F4F8;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: var(--ink-dark); min-height: 100vh; padding-bottom: 85px; letter-spacing: -0.01em; transition: background-color 0.3s ease; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: var(--ink-dark); min-height: 100vh; padding-bottom: 85px; letter-spacing: -0.01em; transition: background-color 0.4s ease; }
 
-/* Alteração dinâmica do fundo baseada na aba ativa */
-body.theme-safari { background-color: var(--bg-safari-theme); }
-body.theme-zanzibar { background-color: var(--bg-zanzibar-theme); }
+body.theme-roteiro { background-color: #F5EFE6; }
 body.theme-frases { background-color: var(--bg-sand); }
+body.theme-mapa { background-color: #F0EDE8; }
 
-/* Barra Superior Elegante */
+/* Nav */
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--safari-green); height: 60px; display: flex; align-items: center; justify-content: center; padding: 0 16px; box-shadow: 0 2px 12px rgba(25, 54, 39, 0.12); transition: background-color 0.3s ease; }
 .nav-title { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 20px; font-weight: 600; letter-spacing: .03em; text-align: center; }
 .nav-title span { color: var(--gold); font-style: italic; font-weight: 400; }
+body.theme-mapa .nav { background: #3A3530; }
+body.theme-frases .nav { background: #7A6118; }
 
-/* Modificadores da barra superior por tema */
-body.theme-zanzibar .nav { background: var(--zanzibar-blue); box-shadow: 0 2px 12px rgba(31, 110, 140, 0.15); }
-
-/* Views com transição suave */
+/* Views */
 .view { display: none; padding: 76px 16px 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.25s ease-in-out; }
 .view.active { display: block; }
+.view-mapa { padding: 60px 0 66px; max-width: none; height: 100vh; height: 100dvh; overflow: hidden; }
+.view-mapa.active { display: flex; flex-direction: column; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Contagem Regressiva Estilo Tag minimalista */
-.cd-banner { background: #EFEECE; border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px; border-radius: var(--rs); text-align: center; font-size: 13px; font-weight: 600; color: #6E5613; margin-bottom: 16px; letter-spacing: 0.01em; box-shadow: inset 0 1px 2px rgba(255,255,255,0.6); }
+/* Countdown */
+.cd-banner { background: #EFEECE; border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px; border-radius: var(--rs); text-align: center; font-size: 13px; font-weight: 600; color: #6E5613; margin-bottom: 16px; letter-spacing: 0.01em; }
 
-/* Header Temático Premium */
-.trip-hdr { background: linear-gradient(135deg, var(--safari-green), #163023); border-radius: var(--r); padding: 26px 20px; color: var(--white); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(46, 90, 68, 0.15); position: relative; overflow: hidden; }
-.trip-hdr::after { content: ''; position: absolute; bottom: -50px; right: -50px; width: 140px; height: 140px; background: rgba(255,255,255,0.03); border-radius: 50%; }
-.trip-hdr h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.01em; }
-.trip-subtitle { font-size: 12px; color: #B3D1C1; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+/* Photo Hero Headers */
+.trip-hdr { border-radius: var(--r); overflow: hidden; margin-bottom: 20px; position: relative; min-height: 160px; display: flex; flex-direction: column; justify-content: flex-end; }
+.trip-hdr-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.trip-hdr-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.28) 60%, rgba(0,0,0,0.08) 100%); }
+.trip-hdr-content { position: relative; z-index: 1; padding: 20px 20px 22px; color: var(--white); }
+.trip-hdr-content h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.01em; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+.trip-subtitle { font-size: 12px; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
 
-/* Cards de Itinerário Sofisticados */
-.day-card { background: var(--white); border-radius: var(--r); padding: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px var(--sh); border: 1px solid var(--border-color); transition: all 0.2s ease; }
-.day-card:active { transform: scale(0.98); box-shadow: 0 2px 4px var(--sh); background: #FAF9F7; }
-.day-num { width: 48px; height: 48px; border-radius: var(--rs); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; color: var(--white); box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
-.view-safari .day-num { background: linear-gradient(135deg, var(--savannah), #A8612A); }
-.view-zanzibar .day-num { background: linear-gradient(135deg, var(--zanzibar-blue), #154D63); }
+/* Accordion Day Rows */
+.day-row { margin-bottom: 8px; border-radius: var(--r); overflow: hidden; box-shadow: 0 3px 10px var(--sh); border: 1px solid var(--border-color); background: var(--white); }
+.day-card { padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: background 0.15s ease; user-select: none; }
+.day-card:active { background: #F9F7F4; }
+.day-row.expanded .day-card { background: #FAF8F5; border-bottom: 1px solid var(--border-color); }
+.day-num { width: 46px; height: 46px; border-radius: var(--rs); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; color: var(--white); }
+.safari-section .day-num { background: linear-gradient(135deg, var(--savannah), #9A5525); }
+.zanzibar-section .day-num { background: linear-gradient(135deg, var(--zanzibar-blue), #134A60); }
 .dn-n { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; line-height: 1; }
 .dn-m { font-size: 9px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; opacity: 0.9; }
 .day-info { flex: 1; min-width: 0; }
 .day-tt { font-weight: 600; font-size: 15px; color: var(--ink-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
-.day-sub { font-size: 13px; color: var(--ink-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.day-sub { font-size: 12px; color: var(--ink-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chevron { font-size: 13px; color: var(--ink-muted); transition: transform 0.25s ease; flex-shrink: 0; }
+.day-row.expanded .chevron { transform: rotate(180deg); }
 
-/* Novas Tags Clean */
-.day-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-.dtag { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
-.dtag.lod { background: #FDF5F0; color: var(--savannah); border: 1px solid rgba(200, 122, 62, 0.15); }
-.dtag.saf { background: #EDF4F1; color: var(--safari-green); border: 1px solid rgba(46, 90, 68, 0.15); }
-.dtag.flight { background: #EDF5F7; color: var(--zanzibar-blue); border: 1px solid rgba(31, 110, 140, 0.15); }
-.dtag.tour { background: #FCF9EC; color: #8A6D1C; border: 1px solid rgba(212, 175, 55, 0.2); }
+/* Accordion Detail Panel — animated */
+.day-detail { max-height: 0; overflow: hidden; opacity: 0; padding: 0 14px; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, padding 0.3s ease; }
+.day-row.expanded > .day-detail { max-height: 900px; opacity: 1; padding: 14px; }
 
-/* Detalhes Internos Aprimorados */
-.detail-container { display: none; animation: fadeIn 0.2s ease-in-out; }
-.dd-hdr { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 4px; }
-.back-btn { width: 42px; height: 42px; background: var(--white); border: 1px solid var(--border-color); border-radius: var(--rs); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px var(--sh); color: var(--ink-dark); transition: background 0.15s; }
-.back-btn:active { background: var(--border-color); }
-.dd-title-box { flex: 1; min-width: 0; }
-.dd-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--ink-dark); line-height: 1.2; }
-.dd-date { font-size: 12px; color: var(--ink-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 2px; }
-
-.info-block { background: var(--white); border-radius: var(--r); padding: 18px; margin-bottom: 14px; box-shadow: 0 4px 12px var(--sh); border: 1px solid var(--border-color); border-left: 4px solid var(--border-color); position: relative; }
+/* Info Grid — side by side */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 380px) { .info-grid { grid-template-columns: 1fr; } }
+.info-block { background: var(--bg-sand); border-radius: var(--rs); padding: 12px 14px; border: 1px solid var(--border-color); border-left: 4px solid var(--border-color); }
+.info-block.full { grid-column: 1 / -1; }
 .info-block.lod-s { border-left-color: var(--gold); }
 .info-block.saf-s { border-left-color: var(--savannah); }
 .info-block.flight-s { border-left-color: var(--zanzibar-blue); }
-.block-ttl { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: 8px; color: var(--ink-muted); display: flex; align-items: center; gap: 5px; }
-.block-content { font-size: 14px; line-height: 1.6; color: #3A332E; }
+.info-block.tour-s { border-left-color: #8FBA8A; }
+.block-ttl { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; margin-bottom: 6px; color: var(--ink-muted); display: flex; align-items: center; gap: 4px; }
+.block-content { font-size: 13px; line-height: 1.6; color: #3A332E; }
 
-/* Swahili Modernizado */
+/* Swahili */
 .search-box { background: var(--white); border: 1px solid var(--border-color); padding: 14px 16px; border-radius: var(--r); width: 100%; font-size: 14px; margin-bottom: 18px; font-family: inherit; outline: none; box-shadow: 0 4px 10px var(--sh); transition: border-color 0.2s; }
 .search-box:focus { border-color: var(--gold); }
 .frase-card { background: var(--white); border-radius: var(--r); padding: 16px; margin-bottom: 10px; box-shadow: 0 4px 10px var(--sh); border: 1px solid var(--border-color); position: relative; cursor: pointer; transition: all 0.15s ease; }
 .frase-card:active { background: #FAF9F6; transform: scale(0.99); }
 .fr-sw { font-size: 17px; font-weight: 700; color: var(--safari-green); margin-bottom: 4px; }
-body.theme-zanzibar .fr-sw { color: var(--zanzibar-blue); }
 .fr-pt { font-size: 14px; color: var(--ink-dark); font-weight: 500; }
 .fr-tip { font-size: 12px; color: var(--ink-muted); font-style: italic; margin-top: 6px; line-height: 1.4; background: #FAF9F6; padding: 6px 10px; border-radius: 6px; }
 .copy-indicator { position: absolute; top: 16px; right: 16px; font-size: 11px; color: var(--gold); opacity: 0; transition: opacity 0.2s; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: #FDF9EC; padding: 2px 6px; border-radius: 4px; }
 .frase-card.copied .copy-indicator { opacity: 1; }
 
-/* Barra de Abas Estilo App Premium */
+/* Tab Bar — 4 tabs */
 .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: rgba(255, 255, 255, 0.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); display: flex; height: 66px; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); padding-bottom: env(safe-area-inset-bottom); }
 .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; border: none; background: none; transition: all 0.2s ease; position: relative; }
-.tab-item .ti { font-size: 20px; line-height: 1; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.tab-item .tl { font-size: 11px; color: var(--ink-muted); font-weight: 600; letter-spacing: 0.01em; }
-
-/* Micro-Indicador de Aba ativa */
+.tab-item .ti { font-size: 18px; line-height: 1; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.tab-item .tl { font-size: 10px; color: var(--ink-muted); font-weight: 600; letter-spacing: 0.01em; }
 .tab-item::after { content: ''; position: absolute; top: 0; width: 24px; height: 3px; border-radius: 0 0 4px 4px; opacity: 0; transition: all 0.2s ease; }
-
 .tab-item.active .ti { transform: scale(1.2) translateY(-2px); }
-.tab-item.active.safari::after { background: var(--savannah); opacity: 1; }
-.tab-item.active.safari .tl { color: var(--savannah); }
-.tab-item.active.zanzibar::after { background: var(--zanzibar-blue); opacity: 1; }
-.tab-item.active.zanzibar .tl { color: var(--zanzibar-blue); }
+.tab-item.active.roteiro::after { background: var(--savannah); opacity: 1; }
+.tab-item.active.roteiro .tl { color: var(--savannah); }
 .tab-item.active.frases::after { background: var(--gold); opacity: 1; }
 .tab-item.active.frases .tl { color: var(--gold); }
+.tab-item.active.mapa::after { background: #3A3530; opacity: 1; }
+.tab-item.active.mapa .tl { color: #3A3530; }
+
+/* Map View */
+.map-filter-bar { display: flex; gap: 10px; padding: 10px 16px; background: var(--white); border-bottom: 1px solid var(--border-color); }
+.map-filter-btn { flex: 1; padding: 9px 12px; border-radius: var(--rs); border: 1.5px solid var(--border-color); background: var(--white); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.map-filter-btn.active-safari { background: var(--savannah); color: var(--white); border-color: var(--savannah); }
+.map-filter-btn.active-zanzibar { background: var(--zanzibar-blue); color: var(--white); border-color: var(--zanzibar-blue); }
+.map-filter-btn.active-both { background: #3A3530; color: var(--white); border-color: #3A3530; }
+#map-container { flex: 1; min-height: 0; height: calc(100dvh - 174px); width: 100%; display: block; }
+.leaflet-popup-content-wrapper { border-radius: var(--rs) !important; font-family: 'DM Sans', sans-serif; }
+.leaflet-popup-content { font-size: 13px; line-height: 1.5; margin: 10px 14px !important; }
+.popup-name { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+.popup-lodge { color: var(--ink-muted); font-size: 12px; }
+.popup-type { font-size: 11px; font-weight: 600; margin-top: 4px; padding: 2px 7px; border-radius: 20px; display: inline-block; }
+.popup-type.safari { background: #FDF5F0; color: var(--savannah); }
+.popup-type.zanzibar { background: #EDF5F7; color: var(--zanzibar-blue); }
+.map-marker { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 2px solid var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.25); cursor: pointer; }
+.map-marker.safari-mk { background: var(--savannah); }
+.map-marker.zanzibar-mk { background: var(--zanzibar-blue); }
 </style>
 </head>
-<body class="theme-safari"> <nav class="nav">
+<body class="theme-roteiro">
+<nav class="nav">
   <div class="nav-title">Igor & Gabi · <span>Tanzânia & Zanzibar</span></div>
 </nav>
 
-<main class="view view-safari active" id="view-safari">
-  <div class="main-list" id="list-safari">
-    <div class="cd-banner" id="countdown-banner">Carregando contagem regressiva...</div>
-    <div class="trip-hdr">
-      <h2>Aventura na Savana</h2>
-      <p class="trip-subtitle">Deslocamentos e Parques Nacionais</p>
-    </div>
-    <div id="grid-safari"></div>
-  </div>
-  <div class="detail-container" id="detail-safari"></div>
-</main>
+<main class="view view-roteiro active" id="view-roteiro">
+  <div class="cd-banner" id="countdown-banner">Carregando contagem regressiva...</div>
 
-<main class="view view-zanzibar" id="view-zanzibar">
-  <div class="main-list" id="list-zanzibar">
-    <div class="trip-hdr" style="background: linear-gradient(135deg, var(--zanzibar-blue), #103F52);">
-      <h2>Paraíso Tropical</h2>
-      <p class="trip-subtitle">Zanzibar e Retorno para Casa</p>
+  <div class="trip-hdr">
+    <div class="trip-hdr-bg" style="background-image: url('https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80');"></div>
+    <div class="trip-hdr-overlay"></div>
+    <div class="trip-hdr-content">
+      <h2>🦁 Aventura na Savana</h2>
+      <p class="trip-subtitle">Safari · Parques Nacionais · 03–10 Jun</p>
     </div>
-    <div id="grid-zanzibar"></div>
   </div>
-  <div class="detail-container" id="detail-zanzibar"></div>
+  <div id="grid-safari" class="safari-section"></div>
+
+  <div style="height: 20px;"></div>
+
+  <div class="trip-hdr">
+    <div class="trip-hdr-bg" style="background-image: url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1200&q=80');"></div>
+    <div class="trip-hdr-overlay"></div>
+    <div class="trip-hdr-content">
+      <h2>🏝️ Paraíso Tropical</h2>
+      <p class="trip-subtitle">Zanzibar · Praias & Passeios · 11–19 Jun</p>
+    </div>
+  </div>
+  <div id="grid-zanzibar" class="zanzibar-section"></div>
 </main>
 
 <main class="view view-frases" id="view-frases">
-  <div class="trip-hdr" style="background: linear-gradient(135deg, var(--gold), #8A6D1C);">
-    <h2>Dicionário de Bolso</h2>
-    <p class="trip-subtitle">Expressões essenciais em Swahili</p>
+  <div class="trip-hdr">
+    <div class="trip-hdr-bg" style="background-image: url('https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200&q=80');"></div>
+    <div class="trip-hdr-overlay"></div>
+    <div class="trip-hdr-content">
+      <h2>Dicionário de Bolso</h2>
+      <p class="trip-subtitle">Expressões essenciais em Swahili</p>
+    </div>
   </div>
   <input type="text" class="search-box" id="search-frases" placeholder="Buscar expressão (ex: obrigado, bom dia)..." oninput="filterFrases()">
   <div id="frases-container"></div>
 </main>
 
+<main class="view view-mapa" id="view-mapa">
+  <div class="map-filter-bar">
+    <button class="map-filter-btn active-both" id="btn-todos" onclick="filterMap('todos')">🗺️ Todos</button>
+    <button class="map-filter-btn" id="btn-safari-map" onclick="filterMap('safari')">🦁 Safari</button>
+    <button class="map-filter-btn" id="btn-zanzibar-map" onclick="filterMap('zanzibar')">🏝️ Zanzibar</button>
+  </div>
+  <div id="map-container"></div>
+</main>
+
 <nav class="tab-bar">
-  <button class="tab-item active safari" onclick="showView('safari')">
-    <span class="ti">🦁</span><span class="tl">Safari</span>
-  </button>
-  <button class="tab-item zanzibar" onclick="showView('zanzibar')">
-    <span class="ti">🏝️</span><span class="tl">Zanzibar</span>
+  <button class="tab-item active roteiro" onclick="showView('roteiro')">
+    <span class="ti">🗓️</span><span class="tl">Roteiro</span>
   </button>
   <button class="tab-item frases" onclick="showView('frases')">
     <span class="ti">🗣️</span><span class="tl">Swahili</span>
+  </button>
+  <button class="tab-item mapa" onclick="showView('mapa')">
+    <span class="ti">🗺️</span><span class="tl">Mapa</span>
   </button>
 </nav>
 
@@ -289,99 +317,91 @@ const FRASES = [
 function showView(viewId) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-  
   document.getElementById('view-' + viewId).classList.add('active');
   document.querySelector('.tab-bar .tab-item.' + viewId).classList.add('active');
-  
-  // Atualiza as classes do body para refletir a paleta visual correta
-  document.body.className = '';
-  document.body.classList.add('theme-' + viewId);
-
-  if(viewId === 'safari' || viewId === 'zanzibar') {
-    document.getElementById('list-' + viewId).style.display = "block";
-    document.getElementById('detail-' + viewId).style.display = "none";
+  document.body.className = 'theme-' + viewId;
+  window.scrollTo(0, 0);
+  if (viewId === 'mapa') {
+    if (!window._mapInitialized) {
+      window._mapInitialized = true;
+      requestAnimationFrame(() => requestAnimationFrame(() => initMap()));
+    } else if (window._map) {
+      requestAnimationFrame(() => window._map.invalidateSize());
+    }
   }
-  window.scrollTo(0,0);
+}
+
+function toggleDay(categoria, idx) {
+  const row = document.getElementById('day-row-' + categoria + '-' + idx);
+  const isExpanded = row.classList.contains('expanded');
+  document.querySelectorAll('#grid-' + categoria + ' .day-row').forEach(r => r.classList.remove('expanded'));
+  if (!isExpanded) {
+    row.classList.add('expanded');
+    setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+  }
 }
 
 function renderGrid(categoria) {
   const grid = document.getElementById('grid-' + categoria);
-  grid.innerHTML = "";
-  
+  grid.innerHTML = '';
+
   ITINERARIO[categoria].forEach((dia, idx) => {
-    const card = document.createElement('div');
-    card.className = "day-card";
-    card.onclick = () => showDetail(categoria, idx);
-    
     const [d, m] = dia.data.split('/');
     const nomeMes = m === '06' ? 'Jun' : 'Mai';
-    
-    card.innerHTML = `
-      <div class="day-num">
-        <span class="dn-n">${d}</span>
-        <span class="dn-m">${nomeMes}</span>
-      </div>
-      <div class="day-info">
-        <div class="day-tt">${dia.local}</div>
-        <div class="day-sub">${dia.sub}</div>
-        <div class="day-tags">
-          <span class="dtag lod">🏨 ${dia.hospedagem.split(' ')[0]}</span>
-          ${dia.safari ? '<span class="dtag saf">🦁 Safari</span>' : ''}
-          ${dia.voo ? '<span class="dtag flight">✈️ Voo</span>' : ''}
-          ${dia.passeio ? '<span class="dtag tour">🏖️ Passeio</span>' : ''}
+
+    // Count info blocks for grid layout decision
+    const blocks = [];
+    blocks.push(`<div class="info-block lod-s full">
+      <div class="block-ttl">🏨 Hospedagem</div>
+      <div class="block-content"><strong>${dia.hospedagem}</strong></div>
+    </div>`);
+
+    if (dia.safari) {
+      blocks.push(`<div class="info-block saf-s">
+        <div class="block-ttl">🦁 Safari</div>
+        <div class="block-content">${dia.safari}</div>
+      </div>`);
+    }
+    if (dia.passeio) {
+      blocks.push(`<div class="info-block tour-s">
+        <div class="block-ttl">🏖️ Passeio</div>
+        <div class="block-content">${dia.passeio}</div>
+      </div>`);
+    }
+    if (dia.voo) {
+      blocks.push(`<div class="info-block flight-s">
+        <div class="block-ttl">✈️ Voo & Logística</div>
+        <div class="block-content">${dia.voo}</div>
+      </div>`);
+    }
+
+    // If only 1 extra block (besides lodging), make it full-width too
+    const extraBlocks = blocks.slice(1);
+    const gridBlocks = extraBlocks.length === 1
+      ? [blocks[0], extraBlocks[0].replace('class="info-block', 'class="info-block full')]
+      : [blocks[0], ...extraBlocks];
+
+    const row = document.createElement('div');
+    row.className = 'day-row';
+    row.id = `day-row-${categoria}-${idx}`;
+    row.innerHTML = `
+      <div class="day-card" onclick="toggleDay('${categoria}', ${idx})">
+        <div class="day-num">
+          <span class="dn-n">${d}</span>
+          <span class="dn-m">${nomeMes}</span>
         </div>
+        <div class="day-info">
+          <div class="day-tt">${dia.local}</div>
+          <div class="day-sub">${dia.sub}</div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="day-detail">
+        <div class="info-grid">${gridBlocks.join('')}</div>
       </div>
     `;
-    grid.appendChild(card);
+    grid.appendChild(row);
   });
-}
-
-function showDetail(categoria, idx) {
-  const dia = ITINERARIO[categoria][idx];
-  const listContainer = document.getElementById('list-' + categoria);
-  const detailContainer = document.getElementById('detail-' + categoria);
-  
-  detailContainer.innerHTML = `
-    <div class="dd-hdr">
-      <button class="back-btn" onclick="hideDetail('${categoria}')">←</button>
-      <div class="dd-title-box">
-        <div class="dd-title">${dia.local}</div>
-        <div class="dd-date">${dia.diaSemana} — ${dia.data}/2026</div>
-      </div>
-    </div>
-    
-    <div class="info-block lod-s">
-      <div class="block-ttl">🏨 Hospedagem / Onde Dormir</div>
-      <div class="block-content"><strong>${dia.hospedagem}</strong></div>
-    </div>
-
-    ${dia.safari ? `
-    <div class="info-block saf-s">
-      <div class="block-ttl">🦁 Atividades do Safari</div>
-      <div class="block-content">${dia.safari}</div>
-    </div>` : ''}
-
-    ${dia.passeio ? `
-    <div class="info-block" style="border-left-color: var(--gold)">
-      <div class="block-ttl">🏖️ Passeios & Lazer</div>
-      <div class="block-content">${dia.passeio}</div>
-    </div>` : ''}
-
-    ${dia.voo ? `
-    <div class="info-block flight-s">
-      <div class="block-ttl">✈️ Informações de Logística & Voo</div>
-      <div class="block-content">${dia.voo}</div>
-    </div>` : ''}
-  `;
-  
-  listContainer.style.display = "none";
-  detailContainer.style.display = "block";
-  window.scrollTo(0,0);
-}
-
-function hideDetail(categoria) {
-  document.getElementById('list-' + categoria).style.display = "block";
-  document.getElementById('detail-' + categoria).style.display = "none";
 }
 
 function renderFrases(lista) {
@@ -438,6 +458,101 @@ function renderCountdown() {
   renderFrases(FRASES);
   renderCountdown();
 })();
+
+// ── MAP ──────────────────────────────────────────────────────────────────────
+
+const MAP_POINTS = {
+  safari: [
+    { name: 'Tarangire National Park', lodge: 'Suricata Boma Lodge', lat: -3.86, lng: 36.05, icon: '🐘' },
+    { name: 'Serengeti National Park', lodge: 'Matawi Serengeti Camp', lat: -2.33, lng: 34.83, icon: '🦁' },
+    { name: 'Ngorongoro Crater', lodge: "Ang'ata Ngorongoro Camp", lat: -3.17, lng: 35.50, icon: '🦏' },
+    { name: 'Lake Manyara NP', lodge: 'Suricata Boma Lodge', lat: -3.55, lng: 35.83, icon: '🦒' }
+  ],
+  zanzibar: [
+    { name: 'Stone Town / Bamboo', lodge: 'Bamboo Hotel', lat: -6.163, lng: 39.19, icon: '🏛️' },
+    { name: 'Nungwi Beach', lodge: 'Zava Nungwi', lat: -5.726, lng: 39.31, icon: '🏖️' },
+    { name: 'Mnemba Island Atoll', lodge: 'Shaba Boutique Hotel', lat: -5.847, lng: 39.42, icon: '🤿' },
+    { name: 'Shaba Hotel Area', lodge: 'Shaba Boutique Hotel', lat: -6.18, lng: 39.20, icon: '🏨' }
+  ]
+};
+
+let _safariLayer, _zanzibarLayer;
+
+function makeIcon(emoji, type) {
+  return L.divIcon({
+    className: '',
+    html: `<div class="map-marker ${type}-mk">${emoji}</div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -22]
+  });
+}
+
+function initMap() {
+  if (typeof L === 'undefined') {
+    console.error('Leaflet not loaded. Check network.');
+    document.getElementById('map-container').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:sans-serif;color:#8A8073;font-size:14px;">⚠️ Mapa indisponível — verifique a conexão e recarregue.</div>';
+    return;
+  }
+  const container = document.getElementById('map-container');
+  if (container._leaflet_id) return; // already initialized
+  const map = L.map(container, { zoomControl: true }).setView([-4.5, 36.5], 6);
+  window._map = map;
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18
+  }).addTo(map);
+
+  _safariLayer = L.layerGroup();
+  _zanzibarLayer = L.layerGroup();
+
+  MAP_POINTS.safari.forEach(p => {
+    const marker = L.marker([p.lat, p.lng], { icon: makeIcon(p.icon, 'safari') });
+    marker.bindPopup(`
+      <div class="popup-name">${p.name}</div>
+      <div class="popup-lodge">🏕️ ${p.lodge}</div>
+      <span class="popup-type safari">🦁 Safari</span>
+    `);
+    _safariLayer.addLayer(marker);
+  });
+
+  MAP_POINTS.zanzibar.forEach(p => {
+    const marker = L.marker([p.lat, p.lng], { icon: makeIcon(p.icon, 'zanzibar') });
+    marker.bindPopup(`
+      <div class="popup-name">${p.name}</div>
+      <div class="popup-lodge">🏨 ${p.lodge}</div>
+      <span class="popup-type zanzibar">🏝️ Zanzibar</span>
+    `);
+    _zanzibarLayer.addLayer(marker);
+  });
+
+  _safariLayer.addTo(map);
+  _zanzibarLayer.addTo(map);
+  setTimeout(() => map.invalidateSize(), 200);
+  setTimeout(() => map.invalidateSize(), 600);
+}
+
+function filterMap(filter) {
+  document.querySelectorAll('.map-filter-btn').forEach(b => b.className = 'map-filter-btn');
+  const map = window._map;
+  if (filter === 'safari') {
+    document.getElementById('btn-safari-map').classList.add('active-safari');
+    map.addLayer(_safariLayer);
+    map.removeLayer(_zanzibarLayer);
+    map.flyTo([-3.2, 35.2], 7, { duration: 1 });
+  } else if (filter === 'zanzibar') {
+    document.getElementById('btn-zanzibar-map').classList.add('active-zanzibar');
+    map.removeLayer(_safariLayer);
+    map.addLayer(_zanzibarLayer);
+    map.flyTo([-6.0, 39.3], 11, { duration: 1 });
+  } else {
+    document.getElementById('btn-todos').classList.add('active-both');
+    map.addLayer(_safariLayer);
+    map.addLayer(_zanzibarLayer);
+    map.flyTo([-4.5, 36.5], 6, { duration: 1 });
+  }
+}
 </script>
 
 </body>
