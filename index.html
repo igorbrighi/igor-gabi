@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Lua de Mel · Tanzânia & Zanzibar</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#2E5A44">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-sand: #F9F6F0;
+  --bg-card: #FFFFFF;
+  --border-color: #E6DFD3;
+  --safari-green: #2E5A44;
+  --savannah: #C87A3E;
+  --zanzibar-blue: #1F6E8C;
+  --gold: #D4AF37;
+  --ink-dark: #2C2520;
+  --ink-muted: #7A6F66;
+  --white: #FFFFFF;
+  --sh: rgba(44, 37, 32, 0.06);
+  --r: 12px;
+  --rs: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: var(--ink-dark); min-height: 100vh; padding-bottom: 70px; }
+
+/* Barra de Navegação Superior */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--safari-green); height: 56px; display: flex; align-items: center; padding: 0 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.nav-title { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 18px; font-weight: 600; letter-spacing: .02em; }
+.nav-title span { color: var(--gold); font-style: italic; }
+
+/* Barra de Abas Inferior */
+.tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--white); border-top: 1px solid var(--border-color); display: flex; height: 62px; box-shadow: 0 -2px 10px var(--sh); }
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; border: none; background: none; }
+.tab-item .ti { font-size: 20px; line-height: 1; transition: transform .15s; }
+.tab-item .tl { font-size: 11px; color: var(--ink-muted); font-weight: 500; }
+.tab-item.active .ti { transform: scale(1.15); }
+.tab-item.active.safari .ti { color: var(--savannah); }
+.tab-item.active.safari .tl { color: var(--savannah); }
+.tab-item.active.zanzibar .ti { color: var(--zanzibar-blue); }
+.tab-item.active.zanzibar .tl { color: var(--zanzibar-blue); }
+.tab-item.active.checklist .ti { color: var(--safari-green); }
+.tab-item.active.checklist .tl { color: var(--safari-green); }
+
+/* Views Compartimentadas */
+.view { display: none; padding: 72px 14px 20px; max-width: 600px; margin: 0 auto; }
+.view.active { display: block; }
+
+/* Header de Boas-vindas */
+.trip-hdr { background: linear-gradient(135deg, var(--safari-green), #193627); border-radius: var(--r); padding: 22px; color: var(--white); margin-bottom: 16px; position: relative; overflow: hidden; }
+.trip-hdr h2 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; margin-bottom: 4px; }
+.trip-subtitle { font-size: 13px; color: #A3BFB0; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Cards de Lista por Dia */
+.day-card { background: var(--white); border-radius: var(--rs); padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; margin-bottom: 8px; box-shadow: 0 2px 4px var(--sh); border: 1px solid transparent; transition: all 0.15s; }
+.day-card:active { transform: scale(0.99); opacity: 0.9; }
+.day-num { width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; color: var(--white); }
+.view-safari .day-num { background: var(--savannah); }
+.view-zanzibar .day-num { background: var(--zanzibar-blue); }
+.dn-n { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; line-height: 1; }
+.dn-m { font-size: 9px; text-transform: uppercase; }
+.day-info { flex: 1; min-width: 0; }
+.day-tt { font-weight: 700; font-size: 14px; color: var(--ink-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.day-sub { font-size: 12px; color: var(--ink-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Tags Dinâmicas */
+.day-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.dtag { font-size: 10px; padding: 2px 7px; border-radius: 12px; font-weight: 500; }
+.dtag.lodge { background: #F0E6DF; color: var(--savannah); }
+.dtag.bicho { background: #E4ECE8; color: var(--safari-green); }
+.dtag.voo { background: #E1EDF2; color: var(--zanzibar-blue); }
+
+/* Interface de Detalhes do Dia */
+.detail-container { display: none; }
+.dd-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.back-btn { width: 40px; height: 40px; background: var(--white); border: 1px solid var(--border-color); border-radius: var(--rs); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+.dd-title-box { flex: 1; }
+.dd-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--ink-dark); }
+.dd-date { font-size: 12px; color: var(--ink-muted); }
+
+/* Blocos Informativos do Dia */
+.info-block { background: var(--white); border-radius: var(--r); padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 4px var(--sh); border-left: 4px solid var(--border-color); }
+.info-block.lodge-sect { border-left-color: var(--gold); }
+.info-block.safari-sect { border-left-color: var(--savannah); }
+.info-block.voo-sect { border-left-color: var(--zanzibar-blue); }
+.block-ttl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin-bottom: 6px; color: var(--ink-muted); }
+.block-content { font-size: 14px; line-height: 1.5; color: var(--ink-dark); }
+
+/* Itens de Atividades/Checklist */
+.item-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F4F0E8; }
+.item-row:last-child { border-bottom: none; }
+.item-chk { width: 20px; height: 20px; border-radius: 4px; border: 1.5px solid var(--border-color); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; background: none; margin-top: 2px; }
+.item-chk.checked { background: var(--safari-green); border-color: var(--safari-green); color: var(--white); }
+.item-chk.checked::after { content: "✓"; }
+.item-txt { font-size: 14px; flex: 1; }
+.item-chk.checked + .item-txt { text-decoration: line-through; color: var(--ink-muted); }
+
+/* Estilo da aba de Checklist Geral */
+.cl-section-ttl { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; margin: 16px 0 8px; color: var(--safari-green); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">Nossa Lua de Mel · <span>Tanzânia & Zanzibar</span></div>
+</nav>
+
+<main class="view view-safari active" id="view-safari">
+  <div class="main-list" id="list-safari">
+    <div class="trip-hdr">
+      <h2>Aventura na Savana</h2>
+      <p class="trip-subtitle">Safáris e Parques Nacionais</p>
+    </div>
+    <div class="days-grid" id="grid-safari"></div>
+  </div>
+  <div class="detail-container" id="detail-safari"></div>
+</main>
+
+<main class="view view-zanzibar" id="view-zanzibar">
+  <div class="main-list" id="list-zanzibar">
+    <div class="trip-hdr" style="background: linear-gradient(135deg, var(--zanzibar-blue), #103F52);">
+      <h2>Paraíso Tropical</h2>
+      <p class="trip-subtitle">Praias e Relaxamento em Zanzibar</p>
+    </div>
+    <div class="days-grid" id="grid-zanzibar"></div>
+  </div>
+  <div class="detail-container" id="detail-zanzibar"></div>
+</main>
+
+<main class="view view-checklist" id="view-checklist">
+  <div class="trip-hdr" style="background: linear-gradient(135deg, #4A5D4E, #2C382F);">
+    <h2>Preparativos Finais</h2>
+    <p class="trip-subtitle">Não esquecer nada importante</p>
+  </div>
+  
+  <div class="cl-section-ttl">Documentos & Saúde</div>
+  <div class="info-block">
+    <div class="item-row"><button class="item-chk" onclick="toggleLocalCheck(this)"></button><div class="item-txt">Passaportes válidos e Certificado de Febre Amarela</div></div>
+    <div class="item-row"><button class="item-chk" onclick="toggleLocalCheck(this)"></button><div class="item-txt">Visto de entrada para a Tanzânia impresso/QR Code</div></div>
+    <div class="item-row"><button class="item-chk" onclick="toggleLocalCheck(this)"></button><div class="item-txt">Seguro viagem com cobertura internacional</div></div>
+    <div class="item-row"><button class="item-chk" onclick="toggleLocalCheck(this)"></button><div class="item-txt">Medicação preventiva contra Malária (consultar médico)</div></div>
+  </div>
+
+  <div class="cl-section-ttl">Mala de Safari</div>
+  <div class="info-block">
+    <div class="item-row"><button class="item-chk" onclick="toggleLocalCheck(this)"></button><div class="item-txt">Roupas de tons neutros (cáqui, bege, verde oliva)</div></div>
+    <div class="item-row"><button class="item-chk" onclick="toggleLocalCheck(this)"></button><div class="item-txt">Repelente potente contra insetos (DEET)</div></div>
+    <div class="item-row"><button class="item-chk" onclick="toggleLocalCheck(this)"></button><div class="item-txt">Óculos de sol, boné/chapéu e protetor solar</div></div>
+    <div class="item-row"><button class="item-chk" onclick="toggleLocalCheck(this)"></button><div class="item-txt">Binóculos e Câmera fotográfica com bom zoom</div></div>
+  </div>
+</main>
+
+<nav class="tab-bar">
+  <button class="tab-item active safari" onclick="showView('safari')">
+    <span class="ti">🦁</span><span class="tl">Safari</span>
+  </button>
+  <button class="tab-item zanzibar" onclick="showView('zanzibar')">
+    <span class="ti">🏝️</span><span class="tl">Zanzibar</span>
+  </button>
+  <button class="tab-item checklist" onclick="showView('checklist')">
+    <span class="ti">📝</span><span class="tl">Checklist</span>
+  </button>
+</nav>
+
+<script>
+// Dados Base do Itinerário (Adicione e edite os dias aqui à vontade!)
+const ITINERARIO = {
+  safari: [
+    {
+      id: "s1",
+      data: "04/06",
+      local: "Parque Nacional do Serengeti",
+      sub: "Início do grande Safari na savana",
+      hospedagem: "Serengeti Luxury Tented Camp",
+      bichos: "Leões, Leopardos, Guepardos e a Grande Migração de Gnus.",
+      voo: "Voo de conexão Arusha para pista de pouso de Seronera às 08:00h.",
+      atividades: ["Game Drive na chegada ao Serengeti", "Pôr do sol na savana", "Jantar romântico sob as estrelas"]
+    },
+    {
+      id: "s2",
+      data: "05/06",
+      local: "Cratera de Ngorongoro",
+      sub: "Exploração do ecossistema da cratera",
+      hospedagem: "Ngorongoro Crater Lodge",
+      bichos: "Rinoceronte Negro (raro!), Elefantes gigantes, Hipopótamos e Flamingos.",
+      voo: "Deslocamento terrestre em veículo 4x4 de safari.",
+      atividades: ["Descida à Cratera de Ngorongoro (600m de profundidade)", "Almoço tipo piquenique perto do lago dos hipopótamos", "Visita cultural opcional a uma tribo Maasai"]
+    }
+  ],
+  zanzibar: [
+    {
+      id: "z1",
+      data: "06/06",
+      local: "Zanzibar · Chegada",
+      sub: "Voo para o paraíso e Stone Town",
+      hospedagem: "The Rock Palace Hotel / Resort em Nungwi",
+      bichos: "Peixes tropicais, tartarugas marinhas.",
+      voo: "Voo de Arusha (ARK) para Zanzibar (ZNZ) - Confirmar horário do bilhete.",
+      atividades: ["Check-in no Resort e drink de boas-vindas", "Caminhada na praia ao pôr do sol", "Jantar de frutos do mar à beira-mar"]
+    },
+    {
+      id: "z2",
+      data: "07/06",
+      local: "Zanzibar · Praias de Nungwi & Kendwa",
+      sub: "Dia de descanso total no mar azul-turquesa",
+      hospedagem: "Resort em Nungwi",
+      bichos: "Golfinhos visíveis em passeios de barco.",
+      voo: "Nenhum voo programado hoje.",
+      atividades: ["Relaxar nas águas cristalinas de Nungwi", "Passeio de barco tradicional (Dhow) no fim de tarde", "Reserva para jantar no famoso restaurante 'The Rock'"]
+    }
+  ]
+};
+
+// Gerenciamento de Abas
+function showView(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  
+  document.getElementById('view-' + viewId).classList.add('active');
+  document.querySelector('.tab-item.' + viewId).classList.add('active');
+  
+  // Reseta para a lista principal ao mudar de aba
+  if(viewId === 'safari' || viewId === 'zanzibar') {
+    document.getElementById('list-' + viewId).style.display = "block";
+    document.getElementById('detail-' + viewId).style.display = "none";
+  }
+  window.scrollTo(0,0);
+}
+
+// Renderizar listas de dias de forma dinâmica
+function renderGrid(categoria) {
+  const grid = document.getElementById('grid-' + categoria);
+  grid.innerHTML = "";
+  
+  ITINERARIO[categoria].forEach((dia, idx) => {
+    const card = document.createElement('div');
+    card.className = "day-card";
+    card.onclick = () => showDetail(categoria, idx);
+    
+    // Separa o dia e o mês para o ícone lateral
+    const [d, m] = dia.data.split('/');
+    
+    card.innerHTML = `
+      <div class="day-num">
+        <span class="dn-n">${d}</span>
+        <span class="dn-m">${m === '06' ? 'Jun' : 'Mai'}</span>
+      </div>
+      <div class="day-info">
+        <div class="day-tt">${dia.local}</div>
+        <div class="day-sub">${dia.sub}</div>
+        <div class="day-tags">
+          <span class="dtag lodge">🏨 Lodge</span>
+          ${dia.bicho ? '<span class="dtag bicho">🐾 Animais</span>' : ''}
+          ${dia.voo ? '<span class="dtag voo">✈️ Voo/Transf.</span>' : ''}
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// Mostrar Detalhes de um Dia específico
+function showDetail(categoria, idx) {
+  const dia = ITINERARIO[categoria][idx];
+  const detailContainer = document.getElementById('detail-' + categoria);
+  const listContainer = document.getElementById('list-' + categoria);
+  
+  // Monta a lista de atividades com checkbox interativo
+  let atividadesHtml = "";
+  if(dia.atividades && dia.atividades.length > 0) {
+    atividadesHtml = `<div class="info-block">
+      <div class="block-ttl">💡 Atividades Planejadas</div>
+      <div class="block-content">
+        ${dia.atividades.map((act, i) => `
+          <div class="item-row">
+            <button class="item-chk" id="chk-${dia.id}-${i}" onclick="toggleActivityCheck('${dia.id}-${i}')"></button>
+            <div class="item-txt">${act}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  detailContainer.innerHTML = `
+    <div class="dd-hdr">
+      <button class="back-btn" onclick="hideDetail('${categoria}')">←</button>
+      <div class="dd-title-box">
+        <div class="dd-title">${dia.local}</div>
+        <div class="dd-date">Dia Programado: ${dia.data}</div>
+      </div>
+    </div>
+    
+    <div class="info-block lodge-sect">
+      <div class="block-ttl">🏨 Onde vamos nos hospedar</div>
+      <div class="block-content"><strong>${dia.hospedagem}</strong></div>
+    </div>
+
+    ${dia.bicho ? `
+    <div class="info-block safari-sect">
+      <div class="block-ttl">🐾 Bichos que esperamos ver</div>
+      <div class="block-content">${dia.bicho}</div>
+    </div>` : ''}
+
+    ${dia.voo ? `
+    <div class="info-block voo-sect">
+      <div class="block-ttl">✈️ Logística & Voos do Dia</div>
+      <div class="block-content">${dia.voo}</div>
+    </div>` : ''}
+
+    ${atividadesHtml}
+  `;
+  
+  listContainer.style.display = "none";
+  detailContainer.style.display = "block";
+  
+  // Recarrega os estados dos checkboxes salvos na memória do celular
+  if(dia.atividades) {
+    dia.atividades.forEach((_, i) => {
+      const id = `chk-${dia.id}-${i}`;
+      if(localStorage.getItem(id) === "true") {
+        const btn = document.getElementById(id);
+        if(btn) btn.classList.add('checked');
+      }
+    });
+  }
+  window.scrollTo(0,0);
+}
+
+function hideDetail(categoria) {
+  document.getElementById('list-' + categoria).style.display = "block";
+  document.getElementById('detail-' + categoria).style.display = "none";
+}
+
+// Funções para marcar e desmarcar atividades (salva no navegador do celular)
+function toggleActivityCheck(idString) {
+  const btn = document.getElementById('chk-' + idString);
+  if(btn.classList.contains('checked')) {
+    btn.classList.remove('checked');
+    localStorage.setItem('chk-' + idString, "false");
+  } else {
+    btn.classList.add('checked');
+    localStorage.setItem('chk-' + idString, "true");
+  }
+}
+
+function toggleLocalCheck(btn) {
+  btn.classList.toggle('checked');
+}
+
+// Inicialização do App
+(() => {
+  renderGrid('safari');
+  renderGrid('zanzibar');
+})();
+</script>
+
+</body>
+</html>
