@@ -8,101 +8,114 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Igor & Gabi">
 <meta name="theme-color" content="#2E5A44">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-sand: #F9F6F0;
+  --bg-sand: #FAF8F5;
   --bg-card: #FFFFFF;
-  --border-color: #E6DFD3;
+  --border-color: #EFEAE2;
   --safari-green: #2E5A44;
   --savannah: #C87A3E;
   --zanzibar-blue: #1F6E8C;
   --gold: #D4AF37;
-  --ink-dark: #2C2520;
-  --ink-muted: #7A6F66;
+  --ink-dark: #231E1B;
+  --ink-muted: #8A8073;
   --white: #FFFFFF;
-  --sh: rgba(44, 37, 32, 0.06);
-  --r: 12px;
-  --rs: 8px;
+  --sh: rgba(44, 37, 32, 0.04);
+  --sh-hover: rgba(44, 37, 32, 0.08);
+  --r: 16px;
+  --rs: 10px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: var(--ink-dark); min-height: 100vh; padding-bottom: 75px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: var(--ink-dark); min-height: 100vh; padding-bottom: 85px; letter-spacing: -0.01em; }
 
-/* Barra Superior */
-.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--safari-green); height: 56px; display: flex; align-items: center; padding: 0 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-.nav-title { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 18px; font-weight: 600; letter-spacing: .02em; }
-.nav-title span { color: var(--gold); font-style: italic; }
+/* Barra Superior Elegante */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--safari-green); height: 60px; display: flex; align-items: center; justify-content: center; padding: 0 16px; box-shadow: 0 2px 12px rgba(25, 54, 39, 0.12); }
+.nav-title { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 20px; font-weight: 600; letter-spacing: .03em; text-align: center; }
+.nav-title span { color: var(--gold); font-style: italic; font-weight: 400; }
 
-/* Barra de Abas Inferior */
-.tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--white); border-top: 1px solid var(--border-color); display: flex; height: 62px; box-shadow: 0 -2px 10px var(--sh); }
-.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; border: none; background: none; }
-.tab-item .ti { font-size: 20px; line-height: 1; transition: transform .15s; }
-.tab-item .tl { font-size: 11px; color: var(--ink-muted); font-weight: 500; }
-.tab-item.active .ti { transform: scale(1.15); }
-.tab-item.active.safari .ti { color: var(--savannah); }
-.tab-item.active.safari .tl { color: var(--savannah); }
-.tab-item.active.zanzibar .ti { color: var(--zanzibar-blue); }
-.tab-item.active.zanzibar .tl { color: var(--zanzibar-blue); }
-.tab-item.active.frases .ti { color: var(--gold); }
-.tab-item.active.frases .tl { color: var(--gold); }
-
-/* Views */
-.view { display: none; padding: 72px 14px 20px; max-width: 600px; margin: 0 auto; }
+/* Views com transição suave */
+.view { display: none; padding: 76px 16px 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.25h ease-in-out; }
 .view.active { display: block; }
 
-/* Contagem Regressiva */
-.cd-banner { background: #EFEAE2; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--rs); text-align: center; font-size: 13px; font-weight: 500; color: var(--safari-green); margin-bottom: 14px; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-/* Header Temático */
-.trip-hdr { background: linear-gradient(135deg, var(--safari-green), #193627); border-radius: var(--r); padding: 22px; color: var(--white); margin-bottom: 16px; }
-.trip-hdr h2 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; margin-bottom: 4px; }
-.trip-subtitle { font-size: 13px; color: #A3BFB0; text-transform: uppercase; letter-spacing: 0.05em; }
+/* Contagem Regressiva Estilo Tag minimalista */
+.cd-banner { background: #EFEECE; border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px; border-radius: var(--rs); text-align: center; font-size: 13px; font-weight: 600; color: #6E5613; margin-bottom: 16px; letter-spacing: 0.01em; box-shadow: inset 0 1px 2px rgba(255,255,255,0.6); }
 
-/* Cards de Itinerário */
-.day-card { background: var(--white); border-radius: var(--rs); padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; margin-bottom: 8px; box-shadow: 0 2px 4px var(--sh); border: 1px solid transparent; transition: all 0.15s; }
-.day-card:active { transform: scale(0.99); opacity: 0.9; }
-.day-num { width: 44px; height: 44px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; color: var(--white); }
-.view-safari .day-num { background: var(--savannah); }
-.view-zanzibar .day-num { background: var(--zanzibar-blue); }
-.dn-n { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; line-height: 1; }
-.dn-m { font-size: 9px; text-transform: uppercase; font-weight: 500; }
+/* Header Temático Premium */
+.trip-hdr { background: linear-gradient(135deg, var(--safari-green), #163023); border-radius: var(--r); padding: 26px 20px; color: var(--white); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(46, 90, 68, 0.15); position: relative; overflow: hidden; }
+.trip-hdr::after { content: ''; position: absolute; bottom: -50px; right: -50px; width: 140px; height: 140px; background: rgba(255,255,255,0.03); border-radius: 50%; }
+.trip-hdr h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.01em; }
+.trip-subtitle { font-size: 12px; color: #B3D1C1; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+
+/* Cards de Itinerário Sofisticados */
+.day-card { background: var(--white); border-radius: var(--r); padding: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px var(--sh); border: 1px solid var(--border-color); transition: all 0.2s ease; }
+.day-card:active { transform: scale(0.98); box-shadow: 0 2px 4px var(--sh); background: #FAF9F7; }
+.day-num { width: 48px; height: 48px; border-radius: var(--rs); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; color: var(--white); box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
+.view-safari .day-num { background: linear-gradient(135deg, var(--savannah), #A8612A); }
+.view-zanzibar .day-num { background: linear-gradient(135deg, var(--zanzibar-blue), #154D63); }
+.dn-n { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; line-height: 1; }
+.dn-m { font-size: 9px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; opacity: 0.9; }
 .day-info { flex: 1; min-width: 0; }
-.day-tt { font-weight: 700; font-size: 14px; color: var(--ink-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.day-sub { font-size: 12px; color: var(--ink-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.day-tt { font-weight: 600; font-size: 15px; color: var(--ink-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
+.day-sub { font-size: 13px; color: var(--ink-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* Tags */
-.day-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
-.dtag { font-size: 10px; padding: 2px 7px; border-radius: 12px; font-weight: 500; }
-.dtag.lod { background: #F0E6DF; color: var(--savannah); }
-.dtag.saf { background: #E4ECE8; color: var(--safari-green); }
-.dtag.flight { background: #E1EDF2; color: var(--zanzibar-blue); }
-.dtag.tour { background: #F7EFCB; color: #947600; }
+/* Novas Tags Clean */
+.day-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.dtag { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+.dtag.lod { background: #FDF5F0; color: var(--savannah); border: 1px solid rgba(200, 122, 62, 0.15); }
+.dtag.saf { background: #EDF4F1; color: var(--safari-green); border: 1px solid rgba(46, 90, 68, 0.15); }
+.dtag.flight { background: #EDF5F7; color: var(--zanzibar-blue); border: 1px solid rgba(31, 110, 140, 0.15); }
+.dtag.tour { background: #FCF9EC; color: #8A6D1C; border: 1px solid rgba(212, 175, 55, 0.2); }
 
-/* Detalhes */
-.detail-container { display: none; }
-.dd-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.back-btn { width: 40px; height: 40px; background: var(--white); border: 1px solid var(--border-color); border-radius: var(--rs); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-.dd-title-box { flex: 1; }
-.dd-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--ink-dark); }
-.dd-date { font-size: 12px; color: var(--ink-muted); }
+/* Detalhes Internos Aprimorados */
+.detail-container { display: none; animation: fadeIn 0.2s ease-in-out; }
+.dd-hdr { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 4px; }
+.back-btn { width: 42px; height: 42px; background: var(--white); border: 1px solid var(--border-color); border-radius: var(--rs); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px var(--sh); color: var(--ink-dark); transition: background 0.15s; }
+.back-btn:active { background: var(--border-color); }
+.dd-title-box { flex: 1; min-width: 0; }
+.dd-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--ink-dark); line-height: 1.2; }
+.dd-date { font-size: 12px; color: var(--ink-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 2px; }
 
-.info-block { background: var(--white); border-radius: var(--r); padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 4px var(--sh); border-left: 4px solid var(--border-color); }
+.info-block { background: var(--white); border-radius: var(--r); padding: 18px; margin-bottom: 14px; box-shadow: 0 4px 12px var(--sh); border: 1px solid var(--border-color); border-left: 4px solid var(--border-color); position: relative; }
 .info-block.lod-s { border-left-color: var(--gold); }
 .info-block.saf-s { border-left-color: var(--savannah); }
 .info-block.flight-s { border-left-color: var(--zanzibar-blue); }
-.block-ttl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin-bottom: 6px; color: var(--ink-muted); }
-.block-content { font-size: 14px; line-height: 1.5; color: var(--ink-dark); }
+.block-ttl { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: 8px; color: var(--ink-muted); display: flex; align-items: center; gap: 5px; }
+.block-content { font-size: 14px; line-height: 1.6; color: #3A332E; }
 
-/* Sistema de Copiar Frases */
-.search-box { background: var(--white); border: 1px solid var(--border-color); padding: 12px; border-radius: var(--rs); width: 100%; font-size: 14px; margin-bottom: 16px; font-family: inherit; outline: none; }
-.frase-card { background: var(--white); border-radius: var(--rs); padding: 14px; margin-bottom: 8px; box-shadow: 0 2px 4px var(--sh); position: relative; cursor: pointer; transition: background 0.15s; }
-.frase-card:active { background: #FAF8F5; }
-.fr-sw { font-size: 16px; font-weight: 700; color: var(--safari-green); margin-bottom: 4px; }
-.fr-pt { font-size: 14px; color: var(--ink-dark); }
-.fr-tip { font-size: 11px; color: var(--ink-muted); font-style: italic; margin-top: 4px; }
-.copy-indicator { position: absolute; top: 14px; right: 14px; font-size: 12px; color: var(--gold); opacity: 0; transition: opacity 0.2s; font-weight: 500; }
+/* Swahili Modernizado */
+.search-box { background: var(--white); border: 1px solid var(--border-color); padding: 14px 16px; border-radius: var(--r); width: 100%; font-size: 14px; margin-bottom: 18px; font-family: inherit; outline: none; box-shadow: 0 4px 10px var(--sh); transition: border-color 0.2s; }
+.search-box:focus { border-color: var(--gold); }
+.frase-card { background: var(--white); border-radius: var(--r); padding: 16px; margin-bottom: 10px; box-shadow: 0 4px 10px var(--sh); border: 1px solid var(--border-color); position: relative; cursor: pointer; transition: all 0.15s ease; }
+.frase-card:active { background: #FAF9F6; transform: scale(0.99); }
+.fr-sw { font-size: 17px; font-weight: 700; color: var(--safari-green); margin-bottom: 4px; }
+.fr-pt { font-size: 14px; color: var(--ink-dark); font-weight: 500; }
+.fr-tip { font-size: 12px; color: var(--ink-muted); font-style: italic; margin-top: 6px; line-height: 1.4; background: #FAF9F6; padding: 6px 10px; border-radius: 6px; }
+.copy-indicator { position: absolute; top: 16px; right: 16px; font-size: 11px; color: var(--gold); opacity: 0; transition: opacity 0.2s; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: #FDF9EC; padding: 2px 6px; border-radius: 4px; }
 .frase-card.copied .copy-indicator { opacity: 1; }
+
+/* Barra de Abas Estilo App Premium */
+.tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: rgba(255, 255, 255, 0.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); display: flex; height: 66px; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); padding-bottom: env(safe-area-inset-bottom); }
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; border: none; background: none; transition: all 0.2s ease; position: relative; }
+.tab-item .ti { font-size: 20px; line-height: 1; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.tab-item .tl { font-size: 11px; color: var(--ink-muted); font-weight: 600; letter-spacing: 0.01em; }
+
+/* Micro-Indicador de Aba ativa */
+.tab-item::after { content: ''; position: absolute; top: 0; width: 24px; height: 3px; border-radius: 0 0 4px 4px; opacity: 0; transition: all 0.2s ease; }
+
+.tab-item.active .ti { transform: scale(1.2) translateY(-2px); }
+.tab-item.active.safari::after { background: var(--savannah); opacity: 1; }
+.tab-item.active.safari .tl { color: var(--savannah); }
+.tab-item.active.zanzibar::after { background: var(--zanzibar-blue); opacity: 1; }
+.tab-item.active.zanzibar .tl { color: var(--zanzibar-blue); }
+.tab-item.active.frases::after { background: var(--gold); opacity: 1; }
+.tab-item.active.frases .tl { color: var(--gold); }
 </style>
 </head>
 <body>
