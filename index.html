@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Lua de Mel · Tanzânia & Zanzibar</title>
+<title>Igor & Gabi · Tanzânia & Zanzibar</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="TZ & ZNZ">
+<meta name="apple-mobile-web-app-title" content="Igor & Gabi">
 <meta name="theme-color" content="#2E5A44">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -108,7 +108,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: va
 <body>
 
 <nav class="nav">
-  <div class="nav-title">Nossa Lua de Mel · <span>Tanzânia & Zanzibar</span></div>
+  <div class="nav-title">Igor & Gabi · <span>Tanzânia & Zanzibar</span></div>
 </nav>
 
 <main class="view view-safari active" id="view-safari">
@@ -156,7 +156,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg-sand); color: va
 </nav>
 
 <script>
-// Banco de Dados estruturado a partir da sua Planilha do Excel
 const ITINERARIO = {
   safari: [
     {
@@ -251,7 +250,6 @@ const ITINERARIO = {
   ]
 };
 
-// Dicionário de Frases em Swahili (Estilo do app do seu amigo)
 const FRASES = [
   { sw: "Jambo / Habari", pt: "Olá / Como vai?", tip: "Cumprimento mais comum e amigável." },
   { sw: "Asante / Asante sana", pt: "Obrigado / Muito obrigado", tip: "Essencial para usar em hotéis e com os guias." },
@@ -264,13 +262,12 @@ const FRASES = [
   { sw: "Bei gani?", pt: "Quanto custa?", tip: "Perfeito para as feirinhas de artesanato em Stone Town." }
 ];
 
-// Gerenciamento de Abas
 function showView(viewId) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
   
   document.getElementById('view-' + viewId).classList.add('active');
-  document.querySelector('.tab-item.' + viewId).classList.add('active');
+  document.querySelector('.tab-bar .tab-item.' + viewId).classList.add('active');
   
   if(viewId === 'safari' || viewId === 'zanzibar') {
     document.getElementById('list-' + viewId).style.display = "block";
@@ -279,7 +276,6 @@ function showView(viewId) {
   window.scrollTo(0,0);
 }
 
-// Renderizar Grade de Dias
 function renderGrid(categoria) {
   const grid = document.getElementById('grid-' + categoria);
   grid.innerHTML = "";
@@ -312,7 +308,6 @@ function renderGrid(categoria) {
   });
 }
 
-// Mostrar Detalhes do Dia
 function showDetail(categoria, idx) {
   const dia = ITINERARIO[categoria][idx];
   const listContainer = document.getElementById('list-' + categoria);
@@ -361,7 +356,6 @@ function hideDetail(categoria) {
   document.getElementById('detail-' + categoria).style.display = "none";
 }
 
-// Renderizar e Filtrar Frases em Swahili
 function renderFrases(lista) {
   const container = document.getElementById('frases-container');
   container.innerHTML = "";
@@ -396,7 +390,6 @@ function copyText(element, text) {
   }
 }
 
-// Lógica de Contagem Regressiva
 function renderCountdown() {
   const targetDate = new Date("2026-06-03T18:00:00").getTime();
   const now = new Date().getTime();
@@ -411,7 +404,6 @@ function renderCountdown() {
   }
 }
 
-// Inicialização Geral
 (() => {
   renderGrid('safari');
   renderGrid('zanzibar');
