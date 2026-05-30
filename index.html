@@ -221,7 +221,7 @@ body.theme-info { background-color: #EBF3F7; }
     <div class="trip-hdr-overlay"></div>
     <div class="trip-hdr-content">
       <h2>🦁 Aventura na Savana</h2>
-      <p class="trip-subtitle">Safari · Parques Nacionais · 03–10 Jun</p>
+      <p class="trip-subtitle">Safari · Parques Nacionais · 03–11 Jun</p>
     </div>
   </div>
   <div id="grid-safari" class="safari-section"></div>
@@ -233,7 +233,7 @@ body.theme-info { background-color: #EBF3F7; }
     <div class="trip-hdr-overlay"></div>
     <div class="trip-hdr-content">
       <h2>🏝️ Paraíso Tropical</h2>
-      <p class="trip-subtitle">Zanzibar · Praias & Passeios · 11–19 Jun</p>
+      <p class="trip-subtitle">Zanzibar · Praias & Passeios · 12–19 Jun</p>
     </div>
   </div>
   <div id="grid-zanzibar" class="zanzibar-section"></div>
@@ -292,18 +292,18 @@ body.theme-info { background-color: #EBF3F7; }
     <div class="info-section-title">🕐 Fusos Horários</div>
     <div class="clock-grid">
       <div class="clock-card">
+        <div class="clock-flag"CA</div>
+        <div class="clock-city">Canadá</div>
+        <div class="clock-time" id="clock-can">--:--</div>
+        <div class="clock-date" id="date-can">---</div>
+        <div class="clock-tz">UTC-7 · -4h SP</div>
+      </div>
+      <div class="clock-card">
         <div class="clock-flag">🇧🇷</div>
         <div class="clock-city">São Paulo</div>
         <div class="clock-time" id="clock-sp">--:--</div>
         <div class="clock-date" id="date-sp">---</div>
         <div class="clock-tz">UTC−3</div>
-      </div>
-      <div class="clock-card">
-        <div class="clock-flag">🇿🇦</div>
-        <div class="clock-city">Joanesburgo</div>
-        <div class="clock-time" id="clock-jnb">--:--</div>
-        <div class="clock-date" id="date-jnb">---</div>
-        <div class="clock-tz">UTC+2 · +5h SP</div>
       </div>
       <div class="clock-card">
         <div class="clock-flag">🇹🇿</div>
@@ -325,11 +325,6 @@ body.theme-info { background-color: #EBF3F7; }
         <div class="rate-sub">1 dólar = 2.600 xelins</div>
       </div>
       <div class="rate-card">
-        <div class="rate-pair">BRL → USD</div>
-        <div class="rate-val">≈ US$ 0,17</div>
-        <div class="rate-sub">1 real = 0,17 dólar</div>
-      </div>
-      <div class="rate-card">
         <div class="rate-pair">BRL → TZS</div>
         <div class="rate-val">≈ 450</div>
         <div class="rate-sub">1 real = 450 xelins</div>
@@ -347,10 +342,6 @@ body.theme-info { background-color: #EBF3F7; }
     <div class="tip-card">
       <div class="tip-title">📞 Emergências na Tanzânia</div>
       <div class="tip-body">Polícia: <strong>112</strong> · Ambulância: <strong>115</strong> · Bombeiros: <strong>114</strong></div>
-    </div>
-    <div class="tip-card">
-      <div class="tip-title">💊 Saúde</div>
-      <div class="tip-body">Tomar antimalárico conforme prescrição. Usar repelente ao amanhecer e anoitecer. Beber apenas água engarrafada.</div>
     </div>
     <div class="tip-card">
       <div class="tip-title">💵 Dinheiro</div>
@@ -411,91 +402,93 @@ body.theme-info { background-color: #EBF3F7; }
 const ITINERARIO = {
   safari: [
     {
-      data: "03/06", diaSemana: "Quarta-feira", local: "Partida de Porto Alegre", sub: "Início da jornada rumo à África!",
-      hospedagem: "Casa de amigos em SP",
-      voo: "Voo G3 1239 (Gol)<br>🛫 POA: 18:35h<br>🛬 SP - GUARULHOS: 20:25h<br>📌 Reserva: CDQLXN"
+      data: "03/06", diaSemana: "Quarta-feira", local: "(POA ➔ SP)", sub: "Início da lua de mel!",
+      voo: "Voo G3 1239 (Gol)<br>🛫 POA: 18:35h<br>🛬 GRU: 20:25h<br>📌 Reserva: CDQLXN",
+      hospedagem: "Casa da Roberta"
     },
     {
-      data: "04/06", diaSemana: "Quinta-feira", local: "Voo Internacional (SP ➔ JNB)", sub: "Travessia do Atlântico",
-      hospedagem: "Pernoite a bordo (Voo)",
-      voo: "Voo de Longo Curso<br>🛫 SP - GUARULHOS: 17:05h<br>🛬 JNB - Joanesburgo: 07:05h (+1 dia)<br>📌 Reserva: CTCRWA"
+      data: "04/06", diaSemana: "Quinta-feira", local: "(SP ➔ JNB)", sub: "Voo da madrugada",
+      voo: "Voo G3 8803 (South African Airways)<br>🛫 GRU: 17:05h<br>🛬 JNB: 07:05h (05Jun)<br>📌 Reserva: CTCRWA",
+      hospedagem: "Pernoite a bordo (Voo)"
     },
     {
       data: "05/06", diaSemana: "Sexta-feira", local: "Conexão para Dar Es Salaam", sub: "Chegada em solo tanzaniano",
-      hospedagem: "Transit Airport B&B",
-      voo: "Voo TC209<br>🛫 JNB - Joanesburgo: 14:15h<br>🛬 DAR - Dar Es Salaam"
+      voo: "Voo TC209 - B737 MAX (Air Tanzania)<br>🛫 JNB: 14:15h<br>🛬 DAR: 18:40h",
+      hospedagem: "Transit Airport B&B em Dar Es Salaam"
     },
     {
-      data: "06/06", diaSemana: "Sábado", local: "Tarangire National Park", sub: "Primeiro dia oficial de Safari",
+      data: "06/06", diaSemana: "Sábado", local: "Tarangire National Park", sub: "Chegada em Kilimanjaro e início dos Safaris",
+      voo: "Voo TC134 Q400 (Air Tanzania)<br>🛫 DAR: 05:00h<br>🛬 JRO - Kilimanjaro: 6:10h ",
       hospedagem: "SURICATA BOMA LODGE",
-      safari: "Safari focado no Tarangire, conhecido por seus gigantescos Baobás e grandes manadas de Elefantes.",
-      voo: "Voo TC134 (Madrugada)<br>🛫 DAR - Dar Es Salaam: 05:00h<br>🛬 JRO - Kilimanjaro"
+      safari: "Parque Nacional de Tarangire - Conhecido por seus gigantescos Baobás e por abrigar a maior população de Elefantes da Tanzânia.",
     },
     {
-      data: "07/06", diaSemana: "Domingo", local: "Serengeti National Park", sub: "As planícies infinitas africanas",
+      data: "07/06", diaSemana: "Domingo", local: "Tarangire ➔ Serengeti", sub: "As planícies infinitas africanas",
       hospedagem: "Matawi Serengeti Camp",
-      safari: "Exploração profunda do Serengeti. Dia ideal para buscar os Big Five (Leão, Leopardo, Elefante, Rinoceronte e Búfalo)."
+      safari: "Deslocamento do Tarangire para o parque nacional do Serengeti - Dia ideal para iniciar a busca pelos Big Five (Leão, Leopardo, Elefante, Rinoceronte e Búfalo)."
     },
     {
-      data: "08/06", diaSemana: "Segunda-feira", local: "Serengeti (Dia Completo)", sub: "Vida selvagem e paisagens icônicas",
+      data: "08/06", diaSemana: "Segunda-feira", local: "Serengeti National Park (Dia Completo)", sub: "Em busca dos Big Five",
       hospedagem: "Matawi Serengeti Camp",
-      safari: "Acompanhamento da vida animal, migrações e o incrível amanhecer na savana."
+      safari: "Busca pelos Big Five, busca das grandes migrações e dos incríveis nascer/pôr do sol na savana."
     },
     {
       data: "09/06", diaSemana: "Terça-feira", local: "Serengeti ➔ Ngorongoro", sub: "Deslocamento estratégico",
       hospedagem: "Ang'ata Ngorongoro Camp",
-      safari: "Últimos game drives saindo do Serengeti a caminho da região da Cratera."
+      safari: "Últimos game drives saindo do Serengeti a caminho da região da Cratera de Ngorongoro, considerada uma das 7 maravilhas naturais da África."
     },
     {
-      data: "10/06", diaSemana: "Quarta-feira", local: "Cratera de Ngorongoro", sub: "O 'Jardim do Éden' da África",
+      data: "10/06", diaSemana: "Quarta-feira", local: "Cratera de Ngorongoro", sub: "Maior caldeira vulcânica intacta e inativa do mundo",
       hospedagem: "Suricata Boma Lodge",
-      safari: "Descida para o interior da cratera vulcânica intacta. Alta chance de avistar o raro Rinoceronte Negro."
+      safari: "Descida para o interior da cratera de Ngorongoro. É o melhor lugar da África para avistar os big 5, com a maior chance de avistar o raro Rinoceronte Negro."
+    },
+    {
+      data: "11/06", diaSemana: "Quinta-feira", local: "Lake Manyara ➔ Zanzibar", sub: "Último safari e início da temporada de praia",
+      voo: "Voo TC105 Q400<br>🛫 JRO: 20:30h<br>🛬 ZNZ: 21:30",
+      hospedagem: "Bamboo Design Hotel - Jambiani (Zanzibar)",
+      safari: "Safari matutino no Lake Manyara National Park (famoso pelos leões escaladores de árvores, babuínos e flamingos). Logo após, deslocamento para o aeroporto com destino a Zanzibar"
+
     }
   ],
   zanzibar: [
     {
-      data: "11/06", diaSemana: "Quinta-feira", local: "Lake Manyara ➔ Zanzibar", sub: "Último safari e voo para a praia",
-      hospedagem: "BAMBOO",
-      safari: "Safari matutino no Lake Manyara National Park (famoso pelos leões escaladores de árvores).",
-      voo: "Voo TC105<br>🛫 JRO - Kilimanjaro: 20:30h<br>🛬 ZNZ - Zanzibar"
-    },
-    {
-      data: "12/06", diaSemana: "Sexta-feira", local: "Zanzibar · Relax no Bamboo", sub: "Primeiro dia para curtir o hotel",
-      hospedagem: "BAMBOO",
+      data: "12/06", diaSemana: "Sexta-feira", local: "Zanzibar · Dia de rei", sub: "Primeiro dia para curtir o hotel e descansar",
+      hospedagem: "Bamboo design hotel - Jambiani (Zanzibar)",
       passeio: "Dia livre para descansar da maratona de safáris e curtir a estrutura do hotel."
     },
     {
       data: "13/06", diaSemana: "Sábado", local: "Zanzibar · Nungwi Beach", sub: "Mudança para o norte da ilha",
-      hospedagem: "ZAVA NUNGWI",
+      hospedagem: "Zava Nungwi",
       passeio: "Aproveitar as praias de areia branca e o pôr do sol espetacular de Nungwi."
     },
     {
       data: "14/06", diaSemana: "Domingo", local: "Zanzibar · Dia de Mergulho", sub: "Explorando o fundo do mar",
-      hospedagem: "ZAVA NUNGWI",
-      passeio: "🤿 MERGULHO AGENDADO!<br>⏰ Horário de Saída: 07:30h da manhã."
+      hospedagem: "Zava Nungwi",
+      passeio: "🤿 Dia de mergulho!<br>⏰ Horário de Saída: 07:30h da manhã."
     },
     {
-      data: "15/06", diaSemana: "Segunda-feira", local: "Zanzibar · Mnemba Island", sub: "Stone Town e Atol de Mnemba",
-      hospedagem: "SHABA BOUTIQUE HOTEL",
+      data: "15/06", diaSemana: "Segunda-feira", local: "Zanzibar · Mnemba Island", sub: "Atol de Mnemba e deslocamento para Stone Town",
+      hospedagem: "Shaba boutique hotel - Stone town",
       passeio: "⛵ Passeio clássico para a Ilha / Atol de Mnemba (famoso pelos recifes de corais e águas translúcidas)."
     },
     {
       data: "16/06", diaSemana: "Terça-feira", local: "Zanzibar ➔ Dar Es Salaam", sub: "Início do retorno para casa",
-      hospedagem: "Pernoite no Aeroporto",
-      voo: "Voo TC105<br>🛫 ZNZ - Zanzibar: 22:00h<br>🛬 DAR - Dar Es Salaam"
+      hospedagem: "Pernoite no Aeroporto em Dar Es Salaam",
+      voo: "Voo TC105 Q400<br>🛫 ZNZ - Zanzibar: 22:00h<br>🛬 DAR: 22:30h"
     },
     {
-      data: "17/06", diaSemana: "Quarta-feira", local: "Dar Es Salaam ➔ Joanesburgo", sub: "Pausa estratégica na África do Sul",
-      hospedagem: "MINT HOTEL",
-      voo: "Voo Internacional<br>🛫 DAR - Dar Es Salaam: 05:10h<br>🛬 JNB - Joanesburgo: 07:55h<br>📌 Localizador: AUE9XH"
+      data: "17/06", diaSemana: "Quarta-feira", local: "Dar Es Salaam ➔ Joanesburgo", sub: "Stop over em Joanesburgo",
+      voo: "Voo Internacional<br>🛫 DAR: 05:10h<br>🛬 JNB: 07:55h<br>📌 Localizador: AUE9XH",
+      hospedagem: "Mint hotel",
+      passeio: "Museu do Apartheid e Nelson Mandela square."
     },
     {
-      data: "18/06", diaSemana: "Quinta-feira", local: "Joanesburgo ➔ São Paulo", sub: "Último voo intercontinental",
-      hospedagem: "Casa de amigos em SP",
-      voo: "Voo de Retorno<br>🛫 JNB - Joanesburgo: 09:50h<br>🛬 SP - GUARULHOS: 15:25h<br>📌 Reserva: CTCRWA"
+      data: "18/06", diaSemana: "Quinta-feira", local: "(JNB ➔ GRU)", sub: "Voltando pra casa",
+      hospedagem: "Casa da Roberta",
+      voo: "Voo G3 8802 (South African Airways)<br>🛫 JNB: 09:50h<br>🛬 GRU: 15:25h<br>📌 Reserva: CTCRWA"
     },
     {
-      data: "19/06", diaSemana: "Sexta-feira", local: "São Paulo ➔ Porto Alegre", sub: "Lar, doce lar!",
+      data: "19/06", diaSemana: "Sexta-feira", local: "São Paulo ➔ Porto Alegre", sub: "Chegada em POA e organização para jogo do Brasil na copa",
       hospedagem: "Casa :)",
       voo: "Voo G3 1278 (Gol)<br>🛫 SP - CONGONHAS: 13:55h<br>🛬 POA: 15:45h<br>📌 Reserva: CDQLXN"
     }
