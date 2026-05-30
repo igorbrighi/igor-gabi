@@ -657,7 +657,7 @@ function renderCountdown() {
 
 // ── NOTES / DIARY ─────────────────────────────────────────────────────────
 const NOTE_DEFAULTS = {
-  'safari-0': '✈️ Comi o cu de quem tá lendo 🌍🦁'
+  'safari-0': '✈️  🌍🦁'
 };
 
 function loadNote(categoria, idx) {
@@ -776,13 +776,13 @@ function updateClocks() {
   const now = new Date();
   const local = tz => new Date(now.toLocaleString('en-US', { timeZone: tz }));
   const sp  = local('America/Sao_Paulo');
-  const jnb = local('Africa/Johannesburg');
+  const can = local('America/Vancouver');
   const dar = local('Africa/Dar_es_Salaam');
   const fmtT = d => d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   const fmtD = d => d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
   const s = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
   s('clock-sp',  fmtT(sp));  s('date-sp',  fmtD(sp));
-  s('clock-jnb', fmtT(jnb)); s('date-jnb', fmtD(jnb));
+  s('clock-can', fmtT(can)); s('date-can', fmtD(can));
   s('clock-dar', fmtT(dar)); s('date-dar', fmtD(dar));
 }
 
@@ -807,13 +807,14 @@ const MAP_POINTS = {
     { name: 'Tarangire National Park', lodge: 'Suricata Boma Lodge', lat: -3.86, lng: 36.05, icon: '🐘' },
     { name: 'Serengeti National Park', lodge: 'Matawi Serengeti Camp', lat: -2.33, lng: 34.83, icon: '🦁' },
     { name: 'Ngorongoro Crater', lodge: "Ang'ata Ngorongoro Camp", lat: -3.17, lng: 35.50, icon: '🦏' },
-    { name: 'Lake Manyara NP', lodge: 'Suricata Boma Lodge', lat: -3.55, lng: 35.83, icon: '🦒' }
+    { name: 'Lake Manyara', lodge: 'Suricata Boma Lodge', lat: -3.55, lng: 35.83, icon: '🦒' },
   ],
   zanzibar: [
-    { name: 'Stone Town / Bamboo', lodge: 'Bamboo Hotel', lat: -6.163, lng: 39.19, icon: '🏛️' },
+    { name: 'Stone Town', lodge: 'Bamboo Hotel', lat: -6.163, lng: 39.19, icon: '🏛️' },
     { name: 'Nungwi Beach', lodge: 'Zava Nungwi', lat: -5.726, lng: 39.31, icon: '🏖️' },
-    { name: 'Mnemba Island Atoll', lodge: 'Shaba Boutique Hotel', lat: -5.847, lng: 39.42, icon: '🤿' },
-    { name: 'Shaba Hotel Area', lodge: 'Shaba Boutique Hotel', lat: -6.18, lng: 39.20, icon: '🏨' }
+    { name: 'Mnemba Island Atoll', lodge: 'Zava Nungwi', lat: -5.847, lng: 39.42, icon: '🤿' },
+    { name: 'Jambiani', lodge: 'Bamboo design hotel', lat: -6.18, lng: 39.20, icon: '🏖️' }
+
   ]
 };
 
